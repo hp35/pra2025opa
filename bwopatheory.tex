@@ -1,0 +1,1772 @@
+%
+% File: backopo/theory/bwopatheory.tex [plain TeX code]
+% Created:     March 30, 2025
+% Last change: April 6, 2025
+%
+% Derivation of the equations governing backward OPA in chiral media,
+% including description of pulsed propagation and dispersion.
+%
+% Copyright (C) 2025, Fredrik Jonsson
+%
+\input macros/epsf.tex
+\input macros/eplain.tex
+\font\ninerm=cmr9
+\font\twentyrm=cmr12 at 20 truept
+\font\twelvesc=cmcsc10 at 12 truept
+\input amssym % to get the {\Bbb E} font (strikethrough E)
+\def\captionwide{\advance\leftskip by 60pt
+  \advance\rightskip by 60pt}
+\def\document #1 {\hsize=150mm\hoffset=4.6mm\vsize=230mm\voffset=7mm
+  \topskip=0pt\baselineskip=12pt\parskip=0pt\leftskip=0pt\parindent=15pt
+  \headline={\ifnum\pageno>1\ifodd\pageno\rightheadline\else\leftheadline\fi
+    \else\hfill\fi}
+  \def\rightheadline{\tenrm{\it #1}
+    \hfil{\it\date}}
+  \def\leftheadline{\tenrm{\it\date}
+    \hfil{\it #1}}
+  \noindent~\vskip-60pt\hskip-40pt{\epsfbox{macros/UU_logo_color.eps}}
+  \vskip-42pt\hfill\vbox{\hbox{{\it\author}}
+  \hbox{{\it\date}}}\vskip 36pt
+  \centerline{\twelvesc #1}
+  \vskip 24pt\noindent}
+\def\section #1 {\bigskip\goodbreak\noindent{\bf #1}
+  \par\nobreak\smallskip\noindent}
+\def\subsection #1 {\bigskip\goodbreak\noindent{\it #1}
+  \par\nobreak\smallskip\noindent}
+\def\iint{\mathop{\int\kern-8pt\int}}
+\def\iiint{\mathop{\int\kern-8pt\int\kern-8pt\int}}
+\def\oiint{\mathop{\int\kern-8pt\int\kern-13.2pt{\bigcirc}}}
+\def\Re{\mathop{\rm Re}\nolimits} % real part
+\def\Im{\mathop{\rm Im}\nolimits} % imaginary part
+\def\Tr{\mathop{\rm Tr}\nolimits} % quantum mechanical trace
+\def\fourier{\mathop{\frak F}\nolimits}
+\def\eqq{\mathop{\vbox{\hbox{\hskip2pt?}\vskip-6pt\hbox{=}}}}
+
+%
+% Blackboard bold fonts.
+%
+\font\mbb=msbm10 
+\newfam\bbb
+\textfont\bbb=\mbb
+
+%
+% Define in which way we want displayed equation numbers to appear in
+% the text. In this case, it is preferred to have the equation numbers
+% as one single running index, rather than the form otherwise commonly
+% found format used in books, (<chapter number>.<equation number>).
+%
+\def\eqconstruct#1{#1}
+
+%
+% Define in which way we want displayed subequation numbers
+% to appear in the text.
+%
+\newcount\subref
+\def\eqsubreftext#1#2{%
+  \subref = #2           % The space stops a <number>.
+  \advance\subref by 96  % `a' is character code 97.
+  #1{\rm\char\subref}%
+}
+
+%
+% Define the 'boxit' macro from D.E. Knuths "The TeXbook, Exercise 21.3.
+%
+\def\boxit#1{\vbox{\hrule\hbox{\vrule\kern3pt
+  \vbox{\kern3pt#1\kern3pt}\kern3pt\vrule}\hrule}}
+
+\def\date{April 6, 2025}
+\def\author{Fredrik Jonsson}
+\document{Theory of backward optical parametric amplification in chiral media}
+\vskip24pt
+\noindent
+In the following analysis, we will keep the model for pulsed wave propagation,
+as this easily is expressed for continuous waves by simply dropping the first
+and second order time derivatimes. The notations follow the separate document
+{\it Pulse propagation in chiral optical parametric processes}, as well as the
+manuscript {\it Pulsed optical parametric amplification in chiral media} by
+Fredrik Jonsson, Christos Flytzanis and Govind Agrawal, as submitted to
+J.~Opt.~Soc.~Am. B in March 2025.
+\bigskip
+\centerline{\epsfxsize=90mm\epsfbox{metapost/fig-01.eps}}
+\medskip
+\noindent
+{\bf Figure~1}.
+Schematic of the setup for backward-wave optical parametric amplification, in
+which the pump and signal waves are launched at $z=0$, and where the idler is
+created in the opposite direction. The medium is in a quasi phase matching
+configuration with a periodic modulation of the sign of the nonlinear coupling
+coefficient, with spatial period of $\Lambda$.
+
+\section{Conventions for the fields}
+The natural time-harmonic oscillation of the quasi-monochromatic electric field
+is for the complex-valued amplitude of the total electric field taken as
+$$
+  {\bf E}({\bf r},t)=\sum_{\omega_{\sigma}}{\rm Re}[
+           {\bf E}_{\omega_{\sigma}}({\bf r},t)\exp(-i\omega_{\sigma}t)].
+$$
+We express this field in the circularly polarized base vectors ${\bf e}_+$
+(left circular polarization, LCP) and ${\bf e}_-$ (right circular polarization,
+RCP),
+$$
+  {\bf e}_+={{1}\over{\sqrt{2}}}({\bf e}_x+i{\bf e}_y),\qquad
+  {\bf e}_-={{1}\over{\sqrt{2}}}({\bf e}_x-i{\bf e}_y).
+  \eqdef{eq:circbasis10}
+$$
+in terms of which the LCP and RCP components of the total electric field are
+projected by using the orthogonality conditions
+${\bf e}^*_{\pm}\cdot{\bf e}_{\pm}=1$ and ${\bf e}^*_{\pm}\cdot{\bf e}_{\mp}=0$,
+to yield\numberedfootnote{We may equally well inverse these relations and
+  express the fields in the Cartesian coordinate system in terms of these
+  circularly polarized components, as
+  $$
+    E^x_{\omega}={{1}\over{\sqrt{2}}}(E^+_{\omega}+E^-_{\omega}),\qquad
+    E^y_{\omega}={{i}\over{\sqrt{2}}}(E^+_{\omega}-E^-_{\omega}).
+  $$}
+$$
+  E^{\pm}_{\omega}={\bf e}^*_{\pm}
+    \cdot(E^+_{\omega}{\bf e}_++E^-_{\omega}{\bf e}_-).
+$$
+Finally, the natural spatially harmonic oscillation of the field of forward
+and backward traveling components are formulated by
+$$
+  E^{\pm}_{\omega_k}(z,t)=
+    E^{f\pm}_{\omega_k}(z,t)\exp(i(\omega n_k/c)z)
+    +E^{b\mp}_{\omega_k}(z,t)\exp(-i(\omega n_k/c)z),
+  \eqdef{eq:waveeq110}
+$$
+for $k=1,2,3$ for the idler, signal and pump, respectively, in which we should
+note that any corrections to the wave vectors due to, say, circular dichroism
+or birefringence will show up in the wave equations to follow.
+
+\section{Wave equations for backward optical parametric amplification}
+From the separate document {\it Pulse propagation in chiral optical parametric
+processes}, using the notation therein, the relevant equations of propagation
+are, for the forward and backward propagating components of the idler at
+angular frequency~$\omega_1$,
+$$
+  \eqalign{
+    &\bigg\{
+       {{\partial E^{f\pm}_{\omega_1}}\over{\partial z}}
+       \pm i{{\omega^2_1 \gamma_1}\over{2c^2}} E^{f\pm}_{\omega_1}
+       +\Big(
+         (k'_1\mp a'_1) {{\partial}\over{\partial t}}
+         +{{i}\over{2}}(k''_1\mp b''_1) {{\partial^2}\over{\partial t^2}}
+       \Big) E^{f\pm}_{\omega_1}
+    \bigg\}
+    \exp\Big(i{{\omega_1 n_1}\over{c}}z\Big)\cr
+    &\quad+\bigg\{
+       -{{\partial E^{b\mp}_{\omega_1}}\over{\partial z}}
+       \mp i{{\omega^2_1 \gamma_1}\over{2c^2}} E^{b\mp}_{\omega_1}
+       +\Big(
+         (k'_1\pm a'_1) {{\partial}\over{\partial t}}
+         +{{i}\over{2}}(k''_1\pm b''_1) {{\partial^2}\over{\partial t^2}}
+       \Big) E^{b\mp}_{\omega_1}
+    \bigg\}
+    \exp\Big(-i{{\omega_1 n_1}\over{c}}z\Big)
+    \cr&\hskip80pt
+      = i{{\omega_1}\over{2cn_1}}
+      \Big(p_1 \pm iq_1 {{\partial}\over{\partial z}}\Big)
+      \Big[
+        E^{f\mp}_{\omega_3} E^{f\pm*}_{\omega_2}
+          \exp\Big(
+            i\Big({{\omega_3 n_3}\over{c}}-{{\omega_2 n_2}\over{c}}\Big)z
+          \Big)
+    \cr&\hskip200pt
+       +E^{f\mp}_{\omega_3} E^{b\mp*}_{\omega_2}
+          \exp\Big(
+            i\Big({{\omega_3 n_3}\over{c}}+{{\omega_2 n_2}\over{c}}\Big)z
+          \Big)
+    \cr&\hskip200pt
+       +E^{b\pm}_{\omega_3} E^{f\pm*}_{\omega_2}
+          \exp\Big(
+            -i\Big({{\omega_3 n_3}\over{c}}+{{\omega_2 n_2}\over{c}}\Big)z
+          \Big)
+    \cr&\hskip200pt
+       +E^{b\pm}_{\omega_3} E^{b\mp*}_{\omega_2}
+          \exp\Big(
+            -i\Big({{\omega_3 n_3}\over{c}}-{{\omega_2 n_2}\over{c}}\Big)z
+          \Big)
+      \Big],\cr
+  }
+  \eqdef{eq:waveeq160}
+$$
+while the wave equation for the signal at angular frequency~$\omega_2$ is
+$$
+  \eqalign{
+    &\bigg\{
+       {{\partial E^{f\pm}_{\omega_2}}\over{\partial z}}
+       \pm i{{\omega^2_2 \gamma_2}\over{2c^2}} E^{f\pm}_{\omega_2}
+       +\Big(
+         (k'_2\mp a'_2) {{\partial}\over{\partial t}}
+         +{{i}\over{2}}(k''_2\mp b''_2) {{\partial^2}\over{\partial t^2}}
+       \Big) E^{f\pm}_{\omega_2}
+    \bigg\}
+    \exp\Big(i{{\omega_2 n_2}\over{c}}z\Big)\cr
+    &\quad+\bigg\{
+       -{{\partial E^{b\mp}_{\omega_2}}\over{\partial z}}
+       \mp i{{\omega^2_2 \gamma_2}\over{2c^2}} E^{b\mp}_{\omega_2}
+       +\Big(
+         (k'_2\pm a'_2) {{\partial}\over{\partial t}}
+         +{{i}\over{2}}(k''_2\pm b''_2) {{\partial^2}\over{\partial t^2}}
+       \Big) E^{b\mp}_{\omega_2}
+    \bigg\}
+    \exp\Big(-i{{\omega_2 n_2}\over{c}}z\Big)
+    \cr&\hskip80pt
+      = i{{\omega_2}\over{2cn_2}}
+      \Big(p_2 \pm iq_2 {{\partial}\over{\partial z}}\Big)
+      \Big[
+        E^{f\mp}_{\omega_3} E^{f\pm*}_{\omega_1}
+          \exp\Big(
+            i\Big({{\omega_3 n_3}\over{c}}-{{\omega_1 n_1}\over{c}}\Big)z
+          \Big)
+    \cr&\hskip200pt
+       +E^{f\mp}_{\omega_3} E^{b\mp*}_{\omega_1}
+          \exp\Big(
+            i\Big({{\omega_3 n_3}\over{c}}+{{\omega_1 n_1}\over{c}}\Big)z
+          \Big)
+    \cr&\hskip200pt
+       +E^{b\pm}_{\omega_3} E^{f\pm*}_{\omega_1}
+          \exp\Big(
+            -i\Big({{\omega_3 n_3}\over{c}}+{{\omega_1 n_1}\over{c}}\Big)z
+          \Big)
+    \cr&\hskip200pt
+       +E^{b\pm}_{\omega_3} E^{b\mp*}_{\omega_1}
+          \exp\Big(
+            -i\Big({{\omega_3 n_3}\over{c}}-{{\omega_1 n_1}\over{c}}\Big)z
+          \Big)
+      \Big],\cr
+  }
+  \eqdef{eq:waveeq162}
+$$
+and, finally, the wave equation for the pump at angular frequency~$\omega_3$ is
+$$
+  \eqalign{
+    &\bigg\{
+       {{\partial E^{f\mp}_{\omega_3}}\over{\partial z}}
+       \mp i{{\omega^2_3 \gamma_3}\over{2c^2}} E^{f\mp}_{\omega_3}
+       +\Big(
+         (k'_3\pm a'_3) {{\partial}\over{\partial t}}
+         +{{i}\over{2}}(k''_3\pm b''_3) {{\partial^2}\over{\partial t^2}}
+       \Big) E^{f\mp}_{\omega_3}
+    \bigg\}
+    \exp\Big(i{{\omega_3 n_3}\over{c}}z\Big)\cr
+    &\quad+\bigg\{
+       -{{\partial E^{b\pm}_{\omega_3}}\over{\partial z}}
+       \pm i{{\omega^2_3 \gamma_3}\over{2c^2}} E^{b\pm}_{\omega_3}
+       +\Big(
+         (k'_3\mp a'_3) {{\partial}\over{\partial t}}
+         +{{i}\over{2}}(k''_3\mp b''_3) {{\partial^2}\over{\partial t^2}}
+       \Big) E^{b\pm}_{\omega_3}
+    \bigg\}
+    \exp\Big(-i{{\omega_3 n_3}\over{c}}z\Big)
+    \cr&\hskip80pt
+      = i{{\omega_3}\over{2cn_3}}
+      \Big(p_3 \mp iq_3 {{\partial}\over{\partial z}}\Big)
+      \Big[
+        E^{f\pm}_{\omega_1} E^{f\pm}_{\omega_2}
+          \exp\Big(
+            i\Big({{\omega_1 n_1}\over{c}}+{{\omega_2 n_2}\over{c}}\Big)z
+          \Big)
+    \cr&\hskip200pt
+       +E^{f\pm}_{\omega_1} E^{b\mp}_{\omega_2}
+          \exp\Big(
+            i\Big({{\omega_1 n_1}\over{c}}-{{\omega_2 n_2}\over{c}}\Big)z
+          \Big)
+    \cr&\hskip200pt
+       +E^{b\mp}_{\omega_1} E^{f\pm}_{\omega_2}
+          \exp\Big(
+            -i\Big({{\omega_1 n_1}\over{c}}-{{\omega_2 n_2}\over{c}}\Big)z
+          \Big)
+    \cr&\hskip200pt
+       +E^{b\mp}_{\omega_1} E^{b\mp}_{\omega_2}
+          \exp\Big(
+            -i\Big({{\omega_1 n_1}\over{c}}+{{\omega_2 n_2}\over{c}}\Big)z
+          \Big)
+      \Big].\cr
+  }
+  \eqdef{eq:waveeq164}
+$$
+\vfill\eject
+
+\section{Projecting out linear gyrotropy from the envelopes}
+The wave equations~\eqref{eq:waveeq160}--\eqref{eq:waveeq164} may be simplified
+considerably by only considering close to phase-matched components, say by
+multiplying by $\exp(i\omega_j n_j z/c)$ and averaging over a few spatial
+periods. However, before projecting out these matched terms, we may in
+Eqs.~\eqref{eq:waveeq160}--\eqref{eq:waveeq164} straight away, from the
+appearance of the terms with coefficients $\gamma_1$, $\gamma_2$ and $\gamma_3$,
+find that the gyrotropic nature of the forward and backward traveling wave
+envelopes can be separated by the {\it ansatz}
+$$
+  \eqalignno{
+    E^{f\pm}_{\omega_k}(z,t)&=A^{f\pm}_{\omega_k}(z,t)
+      \exp\Big(\mp i{{\omega^2_k\gamma_k}\over{2c^2}}z\Big),
+        \eqdefn{eq:waveeq170}&\eqsubdef{eq:waveeq170a}\cr
+    E^{b\mp}_{\omega_k}(z,t)&=A^{b\mp}_{\omega_k}(z,t)
+      \exp\Big(\mp i{{\omega^2_k\gamma_k}\over{2c^2}}z\Big),
+        &\eqsubdef{eq:waveeq170b}\cr
+  }
+$$
+with $k=1,2,3$ for the idler, signal and pump, respectively. This way, carrying
+out the second step in the reduction of the coupled set of nonlinear PDE:s, the
+terms containing the gyration coefficients $\gamma_k$ will be cancelled.
+Notice that in separating the field into forward and backward traveling
+components, the backward traveling LCP/RCP components will be connected
+to the {\it conjugated} basis vectors ${\bf e}^*_{\pm}$, hence the altered
+order of ``$\mp$'' in ``$E^{b\mp}_{\omega_k}$''.
+Thus, by inserting the ansatz of Eq.~\eqref{eq:waveeq170} into
+Eq.~\eqref{eq:waveeq160}, we for the idler at angular frequency~$\omega_1$
+obtain
+$$
+  \eqalign{
+    &\bigg\{
+       {{\partial A^{f\pm}_{\omega_1}}\over{\partial z}}
+       +(k'_1\mp a'_1) {{\partial A^{f\pm}_{\omega_1}}\over{\partial t}}
+       +{{i}\over{2}}(k''_1\mp b''_1)
+            {{\partial^2 A^{f\pm}_{\omega_1}}\over{\partial t^2}}
+    \bigg\}
+    \exp\Big(i\Big({{\omega_1 n_1}\over{c}}
+             \mp {{\omega^2_1\gamma_1}\over{2c^2}}\Big)z\Big)
+    \cr&\qquad
+    +\bigg\{
+       -{{\partial A^{b\mp}_{\omega_1}}\over{\partial z}}
+       +(k'_1\pm a'_1) {{\partial A^{b\mp}_{\omega_1}}\over{\partial t}}
+       +{{i}\over{2}}(k''_1\pm b''_1)
+            {{\partial^2 A^{b\mp}_{\omega_1}}\over{\partial t^2}}
+    \bigg\}
+    \exp\Big(-i\Big({{\omega_1 n_1}\over{c}}z
+             \pm {{\omega^2_1\gamma_1}\over{2c^2}}\Big)z\Big)
+    \cr&\hskip40pt
+      = i{{\omega_1}\over{2cn_1}}
+      \Big(p_1 \pm iq_1 {{\partial}\over{\partial z}}\Big)
+      \Big[
+        A^{f\mp}_{\omega_3} A^{f\pm*}_{\omega_2}
+          \exp\Big(
+            i\Big({{\omega_3 n_3}\over{c}}-{{\omega_2 n_2}\over{c}}\Big)z
+            \pm i\Big({{\omega^2_3\gamma_3}\over{2c^2}}
+                       +{{\omega^2_2\gamma_2}\over{2c^2}}\Big)z
+          \Big)
+    \cr&\hskip140pt
+       +A^{f\mp}_{\omega_3} A^{b\mp*}_{\omega_2}
+          \exp\Big(
+            i\Big({{\omega_3 n_3}\over{c}}+{{\omega_2 n_2}\over{c}}\Big)z
+            \pm i\Big({{\omega^2_3\gamma_3}\over{2c^2}}
+                       +{{\omega^2_2\gamma_2}\over{2c^2}}\Big)z
+          \Big)
+    \cr&\hskip140pt
+       +A^{b\pm}_{\omega_3} A^{f\pm*}_{\omega_2}
+          \exp\Big(
+            -i\Big({{\omega_3 n_3}\over{c}}+{{\omega_2 n_2}\over{c}}\Big)z
+            \pm i\Big({{\omega^2_3\gamma_3}\over{2c^2}}
+                       +{{\omega^2_2\gamma_2}\over{2c^2}}\Big)z
+          \Big)
+    \cr&\hskip140pt
+       +A^{b\pm}_{\omega_3} A^{b\mp*}_{\omega_2}
+          \exp\Big(
+            -i\Big({{\omega_3 n_3}\over{c}}-{{\omega_2 n_2}\over{c}}\Big)z
+            \pm i\Big({{\omega^2_3\gamma_3}\over{2c^2}}
+                       +{{\omega^2_2\gamma_2}\over{2c^2}}\Big)z
+          \Big)
+      \Big],\cr
+  }
+  \eqdef{eq:waveeq180}
+$$
+while we for the signal at angular frequency~$\omega_2$ obtain
+$$
+  \eqalign{
+    &\bigg\{
+       {{\partial A^{f\pm}_{\omega_2}}\over{\partial z}}
+       +(k'_2\mp a'_2) {{\partial A^{f\pm}_{\omega_2}}\over{\partial t}}
+       +{{i}\over{2}}(k''_2\mp b''_2)
+            {{\partial^2 A^{f\pm}_{\omega_2}}\over{\partial t^2}}
+    \bigg\}
+    \exp\Big(i\Big({{\omega_2 n_2}\over{c}}
+             \mp {{\omega^2_2\gamma_2}\over{2c^2}}\Big)z\Big)
+    \cr&\qquad
+    +\bigg\{
+       -{{\partial A^{b\mp}_{\omega_2}}\over{\partial z}}
+       +(k'_2\pm a'_2) {{\partial A^{b\mp}_{\omega_2}}\over{\partial t}}
+       +{{i}\over{2}}(k''_2\pm b''_2)
+            {{\partial^2 A^{b\mp}_{\omega_2}}\over{\partial t^2}}
+    \bigg\}
+    \exp\Big(-i\Big({{\omega_2 n_2}\over{c}}z
+             \pm {{\omega^2_2\gamma_2}\over{2c^2}}\Big)z\Big)
+    \cr&\hskip40pt
+      = i{{\omega_2}\over{2cn_2}}
+      \Big(p_2 \pm iq_2 {{\partial}\over{\partial z}}\Big)
+      \Big[
+        A^{f\mp}_{\omega_3} A^{f\pm*}_{\omega_1}
+          \exp\Big(
+            i\Big({{\omega_3 n_3}\over{c}}-{{\omega_1 n_1}\over{c}}\Big)z
+            \pm i\Big({{\omega^2_3\gamma_3}\over{2c^2}}
+                       +{{\omega^2_1\gamma_1}\over{2c^2}}\Big)z
+          \Big)
+    \cr&\hskip140pt
+       +A^{f\mp}_{\omega_3} A^{b\mp*}_{\omega_1}
+          \exp\Big(
+            i\Big({{\omega_3 n_3}\over{c}}+{{\omega_1 n_1}\over{c}}\Big)z
+            \pm i\Big({{\omega^2_3\gamma_3}\over{2c^2}}
+                       +{{\omega^2_1\gamma_1}\over{2c^2}}\Big)z
+          \Big)
+    \cr&\hskip140pt
+       +A^{b\pm}_{\omega_3} A^{f\pm*}_{\omega_1}
+          \exp\Big(
+            -i\Big({{\omega_3 n_3}\over{c}}+{{\omega_1 n_1}\over{c}}\Big)z
+            \pm i\Big({{\omega^2_3\gamma_3}\over{2c^2}}
+                       +{{\omega^2_1\gamma_1}\over{2c^2}}\Big)z
+          \Big)
+    \cr&\hskip140pt
+       +A^{b\pm}_{\omega_3} A^{b\mp*}_{\omega_1}
+          \exp\Big(
+            -i\Big({{\omega_3 n_3}\over{c}}-{{\omega_1 n_1}\over{c}}\Big)z
+            \pm i\Big({{\omega^2_3\gamma_3}\over{2c^2}}
+                       +{{\omega^2_1\gamma_1}\over{2c^2}}\Big)z
+          \Big)
+      \Big],\cr
+  }
+  \eqdef{eq:waveeq182}
+$$
+\vfill\eject\noindent
+and finally for the pump at angular frequency~$\omega_3$,
+$$
+  \eqalign{
+    &\bigg\{
+       {{\partial A^{f\mp}_{\omega_3}}\over{\partial z}}
+       +(k'_3\pm a'_3) {{\partial A^{f\mp}_{\omega_3}}\over{\partial t}}
+       +{{i}\over{2}}(k''_3\pm b''_3)
+            {{\partial^2 A^{f\mp}_{\omega_3}}\over{\partial t^2}}
+    \bigg\}
+    \exp\Big(i\Big({{\omega_3 n_3}\over{c}}
+             \pm {{\omega^2_3\gamma_3}\over{2c^2}}\Big)z\Big)
+    \cr&\qquad
+    +\bigg\{
+       -{{\partial A^{b\pm}_{\omega_3}}\over{\partial z}}
+       +(k'_3\mp a'_3) {{\partial A^{b\pm}_{\omega_3}}\over{\partial t}}
+       +{{i}\over{2}}(k''_3\mp b''_3)
+            {{\partial^2 A^{b\pm}_{\omega_3}}\over{\partial t^2}}
+    \bigg\}
+    \exp\Big(-i\Big({{\omega_3 n_3}\over{c}}z
+             \mp {{\omega^2_3\gamma_3}\over{2c^2}}\Big)z\Big)
+    \cr&\hskip40pt
+      = i{{\omega_3}\over{2cn_3}}
+      \Big(p_3 \mp iq_3 {{\partial}\over{\partial z}}\Big)
+      \Big[
+        A^{f\pm}_{\omega_1} A^{f\pm}_{\omega_2}
+          \exp\Big(
+            i\Big({{\omega_1 n_1}\over{c}}+{{\omega_2 n_2}\over{c}}\Big)z
+            \mp i\Big({{\omega^2_1\gamma_1}\over{2c^2}}
+                       +{{\omega^2_2\gamma_2}\over{2c^2}}\Big)z
+          \Big)
+    \cr&\hskip140pt
+       +A^{f\pm}_{\omega_1} A^{b\mp}_{\omega_2}
+          \exp\Big(
+            i\Big({{\omega_1 n_1}\over{c}}-{{\omega_2 n_2}\over{c}}\Big)z
+            \mp i\Big({{\omega^2_1\gamma_1}\over{2c^2}}
+                       +{{\omega^2_2\gamma_2}\over{2c^2}}\Big)z
+          \Big)
+    \cr&\hskip140pt
+       +A^{b\mp}_{\omega_1} A^{f\pm}_{\omega_2}
+          \exp\Big(
+            -i\Big({{\omega_1 n_1}\over{c}}-{{\omega_2 n_2}\over{c}}\Big)z
+            \mp i\Big({{\omega^2_1\gamma_1}\over{2c^2}}
+                       +{{\omega^2_2\gamma_2}\over{2c^2}}\Big)z
+          \Big)
+    \cr&\hskip140pt
+       +A^{b\mp}_{\omega_1} A^{b\mp}_{\omega_2}
+          \exp\Big(
+            -i\Big({{\omega_1 n_1}\over{c}}+{{\omega_2 n_2}\over{c}}\Big)z
+            \mp i\Big({{\omega^2_1\gamma_1}\over{2c^2}}
+                       +{{\omega^2_2\gamma_2}\over{2c^2}}\Big)z
+          \Big)
+      \Big].\cr
+  }
+  \eqdef{eq:waveeq184}
+$$
+
+\section{Separating out closely phase-matched terms}
+We will now narrow down the algebra to yield a configuration in which we have
+forward traveling pump and signal waves, while having a backward traveling
+idler wave. In this case, the idler wave at angular frequency~$\omega_1$ is
+from Eq.~\eqref{eq:waveeq180} obtained as
+$$
+  \eqalign{
+   &-{{\partial A^{b\mp}_{\omega_1}}\over{\partial z}}
+       +(k'_1\pm a'_1) {{\partial A^{b\mp}_{\omega_1}}\over{\partial t}}
+       +{{i}\over{2}}(k''_1\pm b''_1)
+            {{\partial^2 A^{b\mp}_{\omega_1}}\over{\partial t^2}}\cr
+    &\hskip90pt
+    =i{{\omega_1 p_1}\over{2cn_1}} A^{f\mp}_{\omega_3} A^{f\pm*}_{\omega_2}
+        \exp(i(k_3-k_2+k_1)z\pm i(\beta_3+\beta_2+\beta_1)z)\cr
+    &\hskip90pt
+    +i{{\omega_1 p_1}\over{2cn_1}} A^{f\mp}_{\omega_3} A^{b\mp*}_{\omega_2}
+        \exp(i(k_3+k_2+k_1)z\pm i(\beta_3+\beta_2+\beta_1)z)\cr
+    &\hskip90pt
+    +i{{\omega_1 p_1}\over{2cn_1}} A^{b\pm}_{\omega_3} A^{f\pm*}_{\omega_2}
+        \exp(-i(k_3+k_2-k_1)z\pm i(\beta_3+\beta_2+\beta_1)z)\cr
+    &\hskip90pt
+    +i{{\omega_1 p_1}\over{2cn_1}} A^{b\pm}_{\omega_3} A^{b\mp*}_{\omega_2}
+        \exp(-i(k_3-k_2-k_1)z\pm i(\beta_3+\beta_2+\beta_1)z),\cr
+  }
+  \eqdef{eq:waveeq210}
+$$
+where we for the sake of simplicity ignored the nonlocal correction to the
+nonlinear coupling coefficients. In similar, the forward traveling signal
+wave at $\omega_2$ is obtained as
+$$
+  \eqalign{
+    &{{\partial A^{f\pm}_{\omega_2}}\over{\partial z}}
+       +(k'_2\mp a'_2) {{\partial A^{f\pm}_{\omega_2}}\over{\partial t}}
+       +{{i}\over{2}}(k''_2\mp b''_2)
+            {{\partial^2 A^{f\pm}_{\omega_2}}\over{\partial t^2}}\cr
+    &\hskip90pt
+    =i{{\omega_2 p_2}\over{2cn_2}} A^{f\mp}_{\omega_3} A^{f\pm*}_{\omega_1}
+        \exp(i(k_3-k_1-k_2)z\pm i(\beta_3+\beta_2+\beta_1)z)\cr
+    &\hskip90pt
+    +i{{\omega_2 p_2}\over{2cn_2}} A^{f\mp}_{\omega_3} A^{b\mp*}_{\omega_1}
+        \exp(i(k_3+k_1-k_2)z\pm i(\beta_3+\beta_2+\beta_1)z)\cr
+    &\hskip90pt
+    +i{{\omega_2 p_2}\over{2cn_2}} A^{b\pm}_{\omega_3} A^{f\pm*}_{\omega_1}
+        \exp(-i(k_3+k_1+k_2)z\pm i(\beta_3+\beta_2+\beta_1)z)\cr
+    &\hskip90pt
+    +i{{\omega_2 p_2}\over{2cn_2}} A^{b\pm}_{\omega_3} A^{b\mp*}_{\omega_1}
+        \exp(-i(k_3-k_1+k_2)z\pm i(\beta_3+\beta_2+\beta_1)z),\cr
+  }
+  \eqdef{eq:waveeq220}
+$$
+and, finally, the forward traveling pump wave at $\omega_3$ as
+$$
+  \eqalign{
+    &{{\partial A^{f\mp}_{\omega_3}}\over{\partial z}}
+       +(k'_3\pm a'_3) {{\partial A^{f\mp}_{\omega_3}}\over{\partial t}}
+       +{{i}\over{2}}(k''_3\pm b''_3)
+            {{\partial^2 A^{f\mp}_{\omega_3}}\over{\partial t^2}}\cr
+    &\hskip90pt
+    =i{{\omega_3 p_3}\over{2cn_3}} A^{f\pm}_{\omega_1} A^{f\pm}_{\omega_2}
+        \exp(i(k_1+k_2-k_3)z\mp i(\beta_3+\beta_2+\beta_1)z)\cr
+    &\hskip90pt
+    +i{{\omega_3 p_3}\over{2cn_3}} A^{f\pm}_{\omega_1} A^{b\mp}_{\omega_2}
+        \exp(i(k_1-k_2-k_3)z\mp i(\beta_3+\beta_2+\beta_1)z)\cr
+    &\hskip90pt
+    +i{{\omega_3 p_3}\over{2cn_3}} A^{b\mp}_{\omega_1} A^{f\pm}_{\omega_2}
+        \exp(-i(k_1-k_2+k_3)z\mp i(\beta_3+\beta_2+\beta_1)z)\cr
+    &\hskip90pt
+    +i{{\omega_3 p_3}\over{2cn_3}} A^{b\mp}_{\omega_1} A^{b\mp}_{\omega_2}
+        \exp(-i(k_1+k_2+k_3)z\mp i(\beta_3+\beta_2+\beta_1)z).\cr
+  }
+  \eqdef{eq:waveeq230}
+$$
+In these expressions, we defined
+$$
+  k_j\equiv {{\omega_j n_j}\over{c}},\qquad
+  \beta_j\equiv {{\omega^2_j\gamma_j}\over{2c^2}},
+  \eqdef{eq:waveeq240}
+$$
+with, as previously, $j=1,2,3$ denoting the idler, signal and pump,
+respectively.
+Notice the way the phase matching in Eqs.~\eqref{eq:waveeq230} appear,
+with the phase mismatch from the electric-dipolar parts occurring with
+various combinations of the wave vector magnitudes $k_j$, while the gyrotropic,
+non-local contributions all appear as the sum $\beta_1+\beta_2+\beta_3$.
+
+If we now focus on terms in which the phase matching yields
+$$
+  k_3-k_2+k_1 \approx 0,
+  \eqdef{eq:waveeq250}
+$$
+we will in the right-hand sides of Eqs.~\eqref{eq:waveeq210}--%
+\eqref{eq:waveeq230} only keep one of the terms, in this case reducing the
+set of equations to
+$$
+  \eqalignno{
+   &-{{\partial A^{b\mp}_{\omega_1}}\over{\partial z}}
+       +(k'_1\pm a'_1) {{\partial A^{b\mp}_{\omega_1}}\over{\partial t}}
+       +{{i}\over{2}}(k''_1\pm b''_1)
+            {{\partial^2 A^{b\mp}_{\omega_1}}\over{\partial t^2}}\cr
+    &\hskip90pt
+    =i{{\omega_1 p_1}\over{2cn_1}} A^{f\mp}_{\omega_3} A^{f\pm*}_{\omega_2}
+        \exp(i(k_3-k_2+k_1)z\pm i(\beta_3+\beta_2+\beta_1)z),
+  \eqdefn{eq:waveeq260}&\eqsubdef{eq:waveeq260a}\cr
+    &{{\partial A^{f\pm}_{\omega_2}}\over{\partial z}}
+       +(k'_2\mp a'_2) {{\partial A^{f\pm}_{\omega_2}}\over{\partial t}}
+       +{{i}\over{2}}(k''_2\mp b''_2)
+            {{\partial^2 A^{f\pm}_{\omega_2}}\over{\partial t^2}}\cr
+    &\hskip90pt
+    =i{{\omega_2 p_2}\over{2cn_2}} A^{f\mp}_{\omega_3} A^{b\mp*}_{\omega_1}
+        \exp(i(k_3+k_1-k_2)z\pm i(\beta_3+\beta_2+\beta_1)z),
+  &\eqsubdef{eq:waveeq260b}\cr
+    &{{\partial A^{f\mp}_{\omega_3}}\over{\partial z}}
+       +(k'_3\pm a'_3) {{\partial A^{f\mp}_{\omega_3}}\over{\partial t}}
+       +{{i}\over{2}}(k''_3\pm b''_3)
+            {{\partial^2 A^{f\mp}_{\omega_3}}\over{\partial t^2}}\cr
+    &\hskip90pt
+    =i{{\omega_3 p_3}\over{2cn_3}} A^{b\mp}_{\omega_1} A^{f\pm}_{\omega_2}
+        \exp(-i(k_1-k_2+k_3)z\mp i(\beta_3+\beta_2+\beta_1)z).
+  &\eqsubdef{eq:waveeq260c}\cr
+  }
+$$
+We adopt the short-hand notations\numberedfootnote{Notice the difference to
+  the usual co-propagating case of optical parametric amplification and
+  oscillation, in which the electric dipolar part of the phase matching
+  condition instead yields
+  $$
+    \Delta k=k_3-k_2-k_1\approx0.
+  $$
+  However, the nonlocal contribution $\Delta\alpha=\beta_3+\beta_2+\beta_1$
+  is identical in both cases.}
+$$
+  \Delta k=k_3-k_2+k_1,\qquad\Delta\alpha=\beta_3+\beta_2+\beta_1,
+  \eqdef{eq:waveeq270}
+$$
+and conclude the derivation of the equations for the field envelopes by
+summarizing them as
+$$
+  \eqalignno{
+    -{{\partial A^{b\mp}_{\omega_1}}\over{\partial z}}
+       +(k'_1\pm a'_1) {{\partial A^{b\mp}_{\omega_1}}\over{\partial t}}
+       +{{i}\over{2}}(k''_1\pm b''_1)
+            {{\partial^2 A^{b\mp}_{\omega_1}}\over{\partial t^2}}
+    &=i{{\omega_1 p_1}\over{2cn_1}} A^{f\mp}_{\omega_3} A^{f\pm*}_{\omega_2}
+        \exp(i(\Delta k\pm \Delta\alpha)z),
+  \eqdefn{eq:waveeq280}&\eqsubdef{eq:waveeq280a}\cr
+    {{\partial A^{f\pm}_{\omega_2}}\over{\partial z}}
+       +(k'_2\mp a'_2) {{\partial A^{f\pm}_{\omega_2}}\over{\partial t}}
+       +{{i}\over{2}}(k''_2\mp b''_2)
+            {{\partial^2 A^{f\pm}_{\omega_2}}\over{\partial t^2}}
+    &=i{{\omega_2 p_2}\over{2cn_2}} A^{f\mp}_{\omega_3} A^{b\mp*}_{\omega_1}
+        \exp(i(\Delta k\pm\Delta\alpha)z),
+  &\eqsubdef{eq:waveeq280b}\cr
+    {{\partial A^{f\mp}_{\omega_3}}\over{\partial z}}
+       +(k'_3\pm a'_3) {{\partial A^{f\mp}_{\omega_3}}\over{\partial t}}
+       +{{i}\over{2}}(k''_3\pm b''_3)
+            {{\partial^2 A^{f\mp}_{\omega_3}}\over{\partial t^2}}
+    &=i{{\omega_3 p_3}\over{2cn_3}} A^{b\mp}_{\omega_1} A^{f\pm}_{\omega_2}
+        \exp(-i(\Delta k\pm\Delta\alpha)z).
+  &\eqsubdef{eq:waveeq280c}\cr
+  }
+$$
+
+\section{Continuous waves}
+For continuous waves, the time derivatives of the envelopes vanish, and we are
+left with the considerably simplified system
+$$
+  \eqalignno{
+    -{{\partial A^{b\mp}_{\omega_1}}\over{\partial z}}
+    &=i{{\omega_1 p_1}\over{2cn_1}} A^{f\mp}_{\omega_3} A^{f\pm*}_{\omega_2}
+        \exp(i(\Delta k\pm \Delta\alpha)z),
+  \eqdefn{eq:waveeq290}&\eqsubdef{eq:waveeq290a}\cr
+    {{\partial A^{f\pm}_{\omega_2}}\over{\partial z}}
+    &=i{{\omega_2 p_2}\over{2cn_2}} A^{f\mp}_{\omega_3} A^{b\mp*}_{\omega_1}
+        \exp(i(\Delta k\pm\Delta\alpha)z),
+  &\eqsubdef{eq:waveeq290b}\cr
+    {{\partial A^{f\mp}_{\omega_3}}\over{\partial z}}
+    &=i{{\omega_3 p_3}\over{2cn_3}} A^{b\mp}_{\omega_1} A^{f\pm}_{\omega_2}
+        \exp(-i(\Delta k\pm\Delta\alpha)z).
+  &\eqsubdef{eq:waveeq290c}\cr
+  }
+$$
+
+\section{A modulated sign of the nonlinear coupling coefficient}
+In quasi phase matching the idea is to periodically modulate the sign of the
+nonlinear coupling coefficient, in order to reverse the phase of the optical
+parametric process after having reached one coherence length of the interaction.
+In this case, we assume a periodic switching of the sign of the coupling
+coefficient without any other changes to its magnitude.
+
+The Fourier decomposition of a function $s(z)$, which is defined by
+$$
+  s(z)=
+  \cases{
+    1, & if $0\le z<\Lambda/2$,\cr
+    0, & if $\Lambda/2\le z<\Lambda$,\cr
+  }
+  \eqdef{eq:waveeq300}
+$$
+and is periodically extended by a period $\Lambda$, is given in a complex-valued
+exponential representation by\numberedfootnote{Or equivalently in real-valued
+  terms,
+  $$
+    s_M(z)={{1}\over{2}}+\sum^M_{m=1}{{(2/\pi)}\over{(2m-1)}}
+      \sin\bigg({{2\pi(2m-1)}\over{\Lambda}}z\bigg),
+  $$
+  which, however, for the purpose of inclusion in the complex-valued wave
+  equations is less suited.}
+$$
+  s_M(z)={{1}\over{2}}+\sum^M_{m=1}{{1}\over{i\pi(2m-1)}}
+  \bigg[
+    \exp\bigg(i{{2\pi(2m-1)}\over{\Lambda}}z\bigg)
+      -\exp\bigg(-i{{2\pi(2m-1)}\over{\Lambda}}z\bigg)
+  \bigg].
+  \eqdef{eq:waveeq310}
+$$
+The periodic expansion and the various terms are shown in Fig.~2 below.
+\bigskip
+\centerline{\epsfxsize=340pt\epsfbox{python/graphs/boxcar.eps}}
+\noindent
+{\captionwide{\bf Figure~2.} Fourier expansion of the periodic expansion of
+  the rectangular (boxcar) function, for terms up to and including $m=4$ and
+  for a period of $\Lambda=2$ and a duty cycle of 0.5 (50\%).}
+\bigskip
+\noindent
+Returning to the original purpose of this, we wish to construct a Fourier
+decomposition of the nonlinear coupling coefficient of the form
+$$
+  p_j(z)=
+  \cases{
+    p_j, & if $0\le z<\Lambda/2$,\cr
+    -p_j, & if $\Lambda/2\le z<\Lambda$,\cr
+  }
+  \eqdef{eq:waveeq320}
+$$
+that is to say, by using the definition above for the boxcar function $s(z)$,
+$$
+  p_j(z)=2(s(z)-1/2)p_j,
+  \eqdef{eq:waveeq330}
+$$
+a $\Lambda$-periodic modulation of the sign of the nonlinear coupling
+parameters $p_j(z)$ is expressed by the complex-valued Fourier decomposition
+$$
+  p_j(z)=2p_j\sum^M_{m=1}{{1}\over{i\pi(2m-1)}}
+  \bigg[
+    \exp\bigg(i{{2\pi(2m-1)}\over{\Lambda}}z\bigg)
+      -\exp\bigg(-i{{2\pi(2m-1)}\over{\Lambda}}z\bigg)
+  \bigg].
+  \eqdef{eq:waveeq340}
+$$
+The terms of the Fourier decomposition of $p_j(z)$ are hence
+$$
+  \eqalignno{
+    m&=1\qquad\rightarrow\qquad -i(2/\pi)
+    \big[\exp(i{{2\pi z}/{\Lambda}})-\exp(-i{{2\pi z}/{\Lambda}})\big]p_j,
+    \eqdefn{eq:waveeq350}&\eqsubdef{eq:waveeq350a}\cr
+    m&=2\qquad\rightarrow\qquad -i({{2}/{3\pi}})
+    \big[\exp(i{{6\pi z}/{\Lambda}})-\exp(-i{{6\pi z}/{\Lambda}})\big]p_j,
+    &\eqsubdef{eq:waveeq350b}\cr
+    m&=3\qquad\rightarrow\qquad -i({{2}/{5\pi}})
+    \big[\exp(i{{10\pi z}/{\Lambda}})-\exp(-i{{10\pi z}/{\Lambda}})\big]p_j,
+    &\eqsubdef{eq:waveeq350c}\cr
+    m&=4\qquad\rightarrow\qquad -i({{2}/{7\pi}})
+    \big[\exp(i{{14\pi z}/{\Lambda}})-\exp(-i{{14\pi z}/{\Lambda}})\big]p_j,
+    &\eqsubdef{eq:waveeq350d}\cr
+    m&=5\qquad\rightarrow\qquad \cdots\ ,
+    &\eqsubdef{eq:waveeq350e}\cr
+  }
+$$
+where the missing $m=0$ term stems from the fact that the sign-reversing form
+of Eq.~\eqref{eq:waveeq330} is perfectly balanced around zero, in contrary to
+the boxcar function as shown in Fig.~2.
+Admittedly, things are now sorted out in a somewhat reversed order, but if
+we allow for varying coupling coefficients $p_j(z)$ in~\eqref{eq:waveeq290},
+only keeping the lowest-order term in Eq.~\eqref{eq:waveeq350a} of the
+form~\eqref{eq:waveeq340} obtain
+$$
+  \eqalignno{
+    -{{\partial A^{b\mp}_{\omega_1}}\over{\partial z}}
+    &={{\omega_1 p_1}\over{\pi cn_1}} A^{f\mp}_{\omega_3} A^{f\pm*}_{\omega_2}
+    \big[\exp(i{{2\pi z}/{\Lambda}})
+      -\underbrace{\exp(-i{{2\pi z}/{\Lambda}})}_{\hbox{keep this}}\big]
+        \exp(i(\Delta k\pm \Delta\alpha)z),
+  \eqdefn{eq:waveeq360}&\eqsubdef{eq:waveeq360a}\cr
+    {{\partial A^{f\pm}_{\omega_2}}\over{\partial z}}
+    &={{\omega_2 p_2}\over{\pi cn_2}} A^{f\mp}_{\omega_3} A^{b\mp*}_{\omega_1}
+    \big[\exp(i{{2\pi z}/{\Lambda}})
+      -\underbrace{\exp(-i{{2\pi z}/{\Lambda}})}_{\hbox{keep this}}\big]
+        \exp(i(\Delta k\pm\Delta\alpha)z),
+  &\eqsubdef{eq:waveeq360b}\cr
+    {{\partial A^{f\mp}_{\omega_3}}\over{\partial z}}
+    &={{\omega_3 p_3}\over{\pi cn_3}} A^{b\mp}_{\omega_1} A^{f\pm}_{\omega_2}
+    \big[
+      \underbrace{\exp(i{{2\pi z}/{\Lambda}})}_{\hbox{keep this}}
+        -\exp(-i{{2\pi z}/{\Lambda}})\big]
+        \exp(-i(\Delta k\pm\Delta\alpha)z).
+  &\eqsubdef{eq:waveeq360c}\cr
+  }
+$$
+Keeping only the phase-matching terms with negative signs of the exponents of
+$2\pi/\Lambda$, Eqs.~\eqref{eq:waveeq360} are reduced to
+$$
+  \eqalignno{
+    -{{\partial A^{b\mp}_{\omega_1}}\over{\partial z}}
+    &=-{{\omega_1 p_1}\over{\pi cn_1}} A^{f\mp}_{\omega_3} A^{f\pm*}_{\omega_2}
+        \exp\big(i(\Delta k\pm \Delta\alpha - {{2\pi}/{\Lambda}})z\big),
+    \eqdefn{eq:waveeq370}&\eqsubdef{eq:waveeq370a}\cr
+    {{\partial A^{f\pm}_{\omega_2}}\over{\partial z}}
+    &=-{{\omega_2 p_2}\over{\pi cn_2}} A^{f\mp}_{\omega_3} A^{b\mp*}_{\omega_1}
+        \exp\big(i(\Delta k\pm\Delta\alpha - {{2\pi}/{\Lambda}})z\big),
+    &\eqsubdef{eq:waveeq370b}\cr
+    {{\partial A^{f\mp}_{\omega_3}}\over{\partial z}}
+    &={{\omega_3 p_3}\over{\pi cn_3}} A^{b\mp}_{\omega_1} A^{f\pm}_{\omega_2}
+        \exp\big(-i(\Delta k\pm\Delta\alpha - {{2\pi}/{\Lambda}})z\big).
+    &\eqsubdef{eq:waveeq370c}\cr
+  }
+$$
+We assign the short-hand notation
+$$
+  \kappa_{\pm}=\Delta k\pm\Delta\alpha - 2\pi/\Lambda
+  \eqdef{eq:waveeq380}
+$$
+and clean up Eqs.~\eqref{eq:waveeq370} from signs, to produce the equation for
+the spatial evolution of the idler ($\omega_1$), signal ($\omega_2$) and pump
+($\omega_3$) envelopes as
+$$
+  \eqalignno{
+    {{\partial A^{b\mp}_{\omega_1}}\over{\partial z}}
+    &={{\omega_1 p_1}\over{\pi cn_1}} A^{f\mp}_{\omega_3} A^{f\pm*}_{\omega_2}
+        \exp(i\kappa_{\pm} z),
+    \eqdefn{eq:waveeq390}&\eqsubdef{eq:waveeq390a}\cr
+    {{\partial A^{f\pm}_{\omega_2}}\over{\partial z}}
+    &=-{{\omega_2 p_2}\over{\pi cn_2}} A^{f\mp}_{\omega_3} A^{b\mp*}_{\omega_1}
+        \exp(i\kappa_{\pm} z),
+    &\eqsubdef{eq:waveeq390b}\cr
+    {{\partial A^{f\mp}_{\omega_3}}\over{\partial z}}
+    &={{\omega_3 p_3}\over{\pi cn_3}} A^{b\mp}_{\omega_1} A^{f\pm}_{\omega_2}
+        \exp(-i\kappa_{\pm} z).
+    &\eqsubdef{eq:waveeq390c}\cr
+  }
+$$
+
+\section{The concept of quasi phase matching}
+In Eqs.~\eqref{eq:waveeq380} and~\eqref{eq:waveeq390}, we see how the concept
+of the {\it coherence length} naturally appear in the theory of quasi phase
+matching. If we for the moment drop the differential contribution
+$\Delta\alpha$ to the phase, perfect phase matching of the OPA process
+requires that
+$$
+  \kappa_{\pm}=\Delta k - 2\pi/\Lambda = 0.
+  \eqsubdef{eq:qpm10}
+$$
+Since $\Lambda$ is the {\it period} of the modulation, containing two layers
+of opposite sign for their respective nonlinear coupling coefficient, this
+means that each layer of ``constant sign''\numberedfootnote{Keep in mind
+  that we currently actually are looking at the first-order term of
+  the Fourier decomposition in Eq.~\eqref{eq:waveeq350a}, which provides
+  a {\it sinusoidal} variation of the coupling coefficient, rather than
+  a periodically extended boxcar function. Hence the quotation marks.}
+of the nonlinear coupling coefficient has the physical length $\Lambda/2$.
+In other words, in order to provide perfect phase matching, or rather
+{\it quasi phase matching}, each layer should have a physical thickness
+of half this period, that is to say
+$$
+  L_{\rm C} = \Lambda/2 = \pi/\Delta k.
+  \eqsubdef{eq:qpm20}
+$$
+This quantity is actually the very definition of the classically used
+{\it coherence length} $L_{\rm C}$, which if we return to the form of
+Eq.~\eqref{eq:waveeq380} including the differential contribution from
+the nonlocal interaction yields\numberedfootnote{See the manuscript
+  {\it Pulsed optical parametric amplification in chiral media} as
+  submitted to J.~Opt.~Soc.~Am. B in March 2025.}
+$$
+  L^{\pm}_{\rm C} \equiv \pi/(\Delta k\pm\Delta\alpha).
+  \eqsubdef{eq:qpm30}
+$$
+Thus, the concept of quasi phase matching can be summarized by that each layer
+of constant sign of the nonlinear coupling coefficient (that is to say,
+``$\chi^{(2)}$'') should be chosen of physical thickess corresponding to one
+coherence length. In the case of an optically active medium, we have the
+choice to design either for the LCP coherence length $L^+_{\rm C}$ or for
+the RCP coherence length $L^-_{\rm C}$, providing different premises for
+optimal phase matching.
+
+\section{Solutions to the envelopes under the non-depleted pump approximation}
+Whenever the pump may be considered as close to constant over the optical
+parametric amplification, the system described by Eqs.~\eqref{eq:waveeq390}
+is reduced to
+%\numberedfootnote{Notice how this system very easily can be
+%  cast into a normalized form by taking the spatial variable as
+%  $\zeta=\gamma^{1/2}_2 A^{f\pm*}_{\omega_1}$ new variables
+%  $u^{\pm*}_1=\gamma^{1/2}_2 A^{f\pm*}_{\omega_1}$ and
+%  $u^{\pm*}_2=\gamma^{1/2}_2 A^{f\pm*}_{\omega_2}$, resulting in
+%$$
+%  \eqalign{
+%    {{\partial A^{b\mp}_{\omega_1}}\over{\partial z}}
+%      &=\gamma_1 A^{f\mp}_{\omega_3} A^{f\pm*}_{\omega_2}\exp(i\kappa_{\pm} z),\%cr
+%    {{\partial A^{f\pm}_{\omega_2}}\over{\partial z}}
+%      &=-\gamma_2 A^{f\mp}_{\omega_3} A^{b\mp*}_{\omega_1}\exp(i\kappa_{\pm} z),%\cr
+%  }
+%$$}
+$$
+  \eqalignno{
+    {{\partial A^{b\mp}_{\omega_1}}\over{\partial z}}
+      &=\gamma_1 A^{f\mp}_{\omega_3} A^{f\pm*}_{\omega_2}\exp(i\kappa_{\pm} z),
+    \eqdefn{eq:waveeq390}&\eqsubdef{eq:waveeq390a}\cr
+    {{\partial A^{f\pm}_{\omega_2}}\over{\partial z}}
+      &=-\gamma_2 A^{f\mp}_{\omega_3} A^{b\mp*}_{\omega_1}\exp(i\kappa_{\pm} z),
+    &\eqsubdef{eq:waveeq390b}\cr
+  }
+$$
+where we defined the short-hand notation for the coupling coefficients
+$$
+  \gamma_j={{\omega_j p_j}\over{\pi cn_j}},\qquad j=1,2,
+  \eqdef{eq:waveeq400}
+$$
+and where the pump envelope $A^{f\mp}_{\omega_3}=\hbox{const.}$, and where the idler
+and signal are subject to the boundary conditions
+$$
+  A^{b\mp}_{\omega_1}(z=L)=0,\qquad
+  A^{f\pm}_{\omega_2}(z=0)=A^{f\pm}_{\omega_2}(0).
+  \eqsubdef{eq:waveeq410}
+$$
+By differentiating Eq.~\eqref{eq:waveeq390b} with respect to $z$ and
+substituting Eq.~\eqref{eq:waveeq390a} for the idler into
+Eq.~\eqref{eq:waveeq390b}, we get the ordinary differential equation
+for the forward traveling signal ($\omega_2$) envelope as
+$$
+  \eqalign{
+    {{\partial^2 A^{f\pm}_{\omega_2}}\over{\partial z^2}}
+      &=-\gamma_2 A^{f\mp}_{\omega_3}
+        {{\partial}\over{\partial z}}\big[A^{b\mp*}_{\omega_1}
+          \exp(i\kappa_{\pm} z)\big]\cr
+      &=-\gamma_2 A^{f\mp}_{\omega_3}
+      \bigg(
+        {{\partial A^{b\mp*}_{\omega_1}}\over{\partial z}}
+          +i\kappa_{\pm} A^{b\mp*}_{\omega_1}
+          \bigg)\exp(i\kappa_{\pm} z)\cr
+      &=-\gamma_2 A^{f\mp}_{\omega_3}
+      \bigg\{
+        \gamma_1 A^{f\mp*}_{\omega_3} A^{f\pm}_{\omega_2}
+        \exp(-i\kappa_{\pm} z)
+          -i\kappa_{\pm}\bigg[
+            {{\displaystyle{{\partial A^{f\pm}_{\omega_2}}
+              \over{\partial z}}\exp(-i\kappa_{\pm} z)}
+            \over{\gamma_2 A^{f\mp}_{\omega_3}}}\bigg]
+          \bigg\}\exp(i\kappa_{\pm} z)\cr
+      &=-\gamma_1\gamma_2 |A^{f\mp}_{\omega_3}|^2 A^{f\pm}_{\omega_2}
+          +i\kappa_{\pm}{{\partial A^{f\pm}_{\omega_2}}\over{\partial z}}.\cr
+  }
+  \eqdef{eq:waveeq420}
+$$
+In similar, we by differentiating Eq.~\eqref{eq:waveeq390a} with respect
+to $z$ and substituting Eq.~\eqref{eq:waveeq390b} for the idler into
+Eq.~\eqref{eq:waveeq390a}, we get the ordinary differential equation for
+the backward traveling idler ($\omega_1$) envelope as
+$$
+  \eqalign{
+    {{\partial^2 A^{f\pm}_{\omega_1}}\over{\partial z^2}}
+      &=\gamma_1 A^{f\mp}_{\omega_3}
+        {{\partial}\over{\partial z}}\big[A^{f\pm*}_{\omega_2}
+          \exp(i\kappa_{\pm} z)\big]\cr
+      &=\gamma_1 A^{f\mp}_{\omega_3}
+      \bigg(
+        {{\partial A^{f\pm*}_{\omega_2}}\over{\partial z}}
+          +i\kappa_{\pm} A^{f\pm*}_{\omega_2}
+          \bigg)\exp(i\kappa_{\pm} z)\cr
+      &=\gamma_1 A^{f\mp}_{\omega_3}
+      \bigg\{
+        -\gamma_2 A^{f\mp*}_{\omega_3} A^{b\mp}_{\omega_1}
+        \exp(-i\kappa_{\pm} z)
+          +i\kappa_{\pm}\bigg[
+            {{\displaystyle{{\partial A^{b\mp}_{\omega_1}}
+              \over{\partial z}}\exp(-i\kappa_{\pm} z)}
+            \over{\gamma_1 A^{f\mp}_{\omega_3}}}\bigg]
+          \bigg\}\exp(i\kappa_{\pm} z)\cr
+      &=-\gamma_1\gamma_2 |A^{f\mp}_{\omega_3}|^2 A^{b\mp}_{\omega_1}
+          +i\kappa_{\pm}{{\partial A^{b\mp}_{\omega_1}}\over{\partial z}}.\cr
+  }
+  \eqdef{eq:waveeq430}
+$$
+Thus, to summarize, we for the backward traveling idler and forward traveling
+signal envelopes have the identical forms
+\par\boxit{
+$$
+  \eqalignno{
+    &{{\partial^2 A^{b\mp}_{\omega_1}}\over{\partial z^2}}
+      -i\kappa_{\pm}{{\partial A^{b\mp}_{\omega_1}}\over{\partial z}}
+      +\gamma_1\gamma_2 |A^{f\mp}_{\omega_3}|^2 A^{b\mp}_{\omega_1}=0,
+    \eqdefn{eq:waveeq440}&\eqsubdef{eq:waveeq440a}\cr
+    &{{\partial^2 A^{f\pm}_{\omega_2}}\over{\partial z^2}}
+      -i\kappa_{\pm}{{\partial A^{f\pm}_{\omega_2}}\over{\partial z}}
+      +\gamma_1\gamma_2 |A^{f\mp}_{\omega_3}|^2 A^{f\pm}_{\omega_2}=0.
+    &\eqsubdef{eq:waveeq440b}\cr
+  }
+$$
+}
+\noindent
+That these equations are identical, despite that one is for a backward traveling
+wave and the other for a forward traveling component, should not be surprising
+as they origin from the same wave equation, which always is invariant regardless
+of the direction of propagation, with the solutions and directions determined by
+the boundary conditions for launching of the waves.
+
+\subsection{General solution}
+In order to solve the second-order ordinary differential equation for the idler
+and signal envelopes, we notice that they both share the characteristic
+polynomial
+$$
+  r^2 - i\kappa_{\pm}r + \gamma_1\gamma_2 |A^{f\mp}_{\omega_3}|^2 =0,
+  \eqdef{eq:waveeq450}
+$$
+with two distinct roots for each polarization state,
+$$
+  r_1 = i\kappa_{\pm}/2 + ib_{\pm},\qquad r_2 = i\kappa_{\pm}/2 - ib_{\pm},
+  \eqdef{eq:waveeq460}
+$$
+where we defined
+$$
+  b_{\pm}=(\kappa^2_{\pm}/4 +\gamma_1\gamma_2|A^{f\mp}_{\omega_3}|^2)^{1/2}.
+  \eqdef{eq:waveeq470}
+$$
+From the characteristic roots of Eq.~\eqref{eq:waveeq450}, we immediately find
+the general solutions for envelopes of the idler signal as
+$$
+  \eqalignno{
+    A^{b\mp}_{\omega_1}(z)
+      &=C'_1\exp(i(\kappa_{\pm}/2+ib_{\pm})z)
+          +C'_2\exp(i(\kappa_{\pm}/2-ib_{\pm})z)&\cr
+      &=(C_1\cos(b_{\pm}z)+C_2\sin(b_{\pm}z))\exp(i\kappa_{\pm}z/2),
+        \eqdefn{eq:waveeq480}&\eqsubdef{eq:waveeq480a}\cr
+    A^{f\pm}_{\omega_2}(z)
+      &=(D_1\cos(b_{\pm}z)+D_2\sin(b_{\pm}z))\exp(i\kappa_{\pm}z/2),
+        &\eqsubdef{eq:waveeq480b}\cr
+  }
+$$
+where $C_j$ and $D_j$, $j=1,2$, are constants of integration.
+
+\subsection{Application of boundary conditions I -- The idler envelope}
+Starting with the backward traveling idler, we from Eq.~\eqref{eq:waveeq480}
+have that
+$$
+  (C_1\cos(b_{\pm}L)+C_2\sin(b_{\pm}L))\exp(i\kappa_{\pm}L/2)
+    =A^{b\mp}_{\omega_1}(L)
+    =\hbox{known}.
+  \eqdefn{eq:waveeq490}
+$$
+Meanwhile, by differentiating Eq.~\eqref{eq:waveeq480} with respect to $z$,
+evaluating the expression at $z=0$ and interpreting the result against
+Eq.~\eqref{eq:waveeq390a}, we obtain a second relation for the coefficients
+$C_1$ and $C_2$ as
+$$
+  \eqalign{
+  &b_{\pm}(-C_1\sin(b_{\pm}0)+C_2\cos(b_{\pm}0))\exp(i\kappa_{\pm}0/2)
+  \cr&\hskip60pt
+  +i(\kappa_{\pm}/2)(C_1\cos(b_{\pm}0)+C_2\sin(b_{\pm}0))\exp(i\kappa_{\pm}0/2)
+  \cr&\hskip100pt
+    = \gamma_1 A^{f\mp}_{\omega_3} A^{f\pm*}_{\omega_2}(0)\exp(i\kappa_{\pm} 0),\cr
+  }
+  \eqdef{eq:waveeq500}
+$$
+that is to say,
+$$
+  i(\kappa_{\pm}/2)C_1+b_{\pm}C_2
+    = \gamma_1 A^{f\mp}_{\omega_3}(0) A^{f\pm*}_{\omega_2}(0),
+  \eqdef{eq:waveeq510}
+$$
+where we recall that this analysis entirely is done under the assumption
+$A^{f\mp}_{\omega_3}(z)=\hbox{const.}$ Solving Eqs.~\eqref{eq:waveeq490}
+and~\eqref{eq:waveeq500} for $C_1$ and $C_2$ then yields
+\par\boxit{
+$$
+  \eqalignno{
+    C_1&={{A^{b\mp}_{\omega_1}(L)\exp(-i\kappa_{\pm} L/2)
+          -(\gamma_1/b_{\pm})\sin(b_{\pm}L)A^{f\mp}_{\omega_3}(0) A^{f\pm*}_{\omega_2}(0)}
+            \over{\cos(b_{\pm}L)-i(\kappa_{\pm}/2b_{\pm})\sin(b_{\pm}L)}},
+    \eqdefn{eq:waveeq520}&\eqsubdef{eq:waveeq520a}\cr
+    C_2&={{(\gamma_1/b_{\pm})\cos(b_{\pm}L)A^{f\mp}_{\omega_3}(0) A^{f\pm*}_{\omega_2}(0)
+          -i(\kappa_{\pm}/2b_{\pm})A^{b\mp}_{\omega_1}(L)\exp(-i\kappa_{\pm} L/2)}
+            \over{\cos(b_{\pm}L)-i(\kappa_{\pm}/2b_{\pm})\sin(b_{\pm}L)}},
+    &\eqsubdef{eq:waveeq520b}\cr
+  }
+$$
+}\noindent
+where we already at this stage took the opportunity to normalize the parameters
+$b_{\pm}$, $\gamma_j$ and $\kappa_{\pm}$ by multiplying the numerators and
+denominators in Eqs.~\eqref{eq:waveeq520} by the length $L$.
+Thus, just to summarize without entering a rather messy algebra in attempting
+to formulate an explicit form, the solution for the envelope of the backward
+traveling idler wave from Eqs.~\eqref{eq:waveeq480a} and~\eqref{eq:waveeq520}
+is
+\par\boxit{
+$$
+  A^{b\mp}_{\omega_1}(z)=(C_1\cos(b_{\pm}z)+C_2\sin(b_{\pm}z))\exp(i\kappa_{\pm}z/2).
+  \eqdef{eq:waveeq530}
+$$
+}
+
+\subsection{Application of boundary conditions II -- The signal envelope}
+Continuing with the forward traveling signal, we from Eq.~\eqref{eq:waveeq480}
+at $z=0$ have that
+$$
+  (D_1\cos(b_{\pm}0)+D_2\sin(b_{\pm}0))\exp(i\kappa_{\pm}0/2)
+    = D_1 = A^{f\pm}_{\omega_2}(0) =\hbox{known}.
+  \eqdef{eq:waveeq540}
+$$
+In other words, the coefficient $D_1$ is trivially obtained as the amplitude
+of the initial signal at $z=0$.
+Meanwhile, in similar to the process of obtaining the coefficients for the
+idler, by differentiating Eq.~\eqref{eq:waveeq480b} with respect to $z$,
+evaluating the expression at $z=L$ and interpreting the result against
+Eq.~\eqref{eq:waveeq390b} under the assumption that we do not launch an
+idler at $z=L$ ($A^{b\mp*}_{\omega_1}(L)=0$), we obtain a second relation for
+the coefficients $D_1$ and $D_2$ as
+$$
+  \eqalign{
+  &b_{\pm}(-D_1\sin(b_{\pm}L)+D_2\cos(b_{\pm}L))\exp(i\kappa_{\pm}L/2)
+  \cr&\hskip60pt
+  +i(\kappa_{\pm}/2)(D_1\cos(b_{\pm}L)+D_2\sin(b_{\pm}L))\exp(i\kappa_{\pm}L/2)
+  \cr&\hskip100pt
+    = -\gamma_2 A^{f\mp}_{\omega_3} A^{b\mp*}_{\omega_1}(L)\exp(i\kappa_{\pm} L)
+  \cr&\hskip100pt
+    = 0,\cr
+  }
+  \eqdef{eq:waveeq550}
+$$
+that is to say, since we previously found that $D_1=A^{f\pm}_{\omega_2}(0)$, we
+may solve Eq.~\eqref{eq:waveeq550} for $D_2$ to obtain\numberedfootnote{We may
+  here ask ourselves the very basic question: {\it Why is it that the
+  coupling coefficient $\gamma_2$ does not show up neither in
+  Eq.~\eqref{eq:waveeq520}--\eqref{eq:waveeq530} nor Eq.~\eqref{eq:waveeq560}?}
+  For example, $\gamma_1$ appear explicitly in Eq.~\eqref{eq:waveeq520},
+  so why not $\gamma_1$? Is something wrong here? Obviously, the only way
+  that $\gamma_2$ would enter the expressions explicitly is through
+  Eq.~\eqref{eq:waveeq550}; however, there $\gamma_2$ is coupled to
+  the fact that  $A^{b\mp*}_{\omega_1}(L)=0$, and $\gamma_2$ hence never
+  enter the expressions at this stage. However, $\gamma_2$ is present
+  through the definition of $b_{\pm}$ in Eq.~\eqref{eq:waveeq470},
+  $b_{\pm}=(\kappa^2_{\pm}/4 +\gamma_1\gamma_2|A^{f\mp}_{\omega_3}|^2)^{1/2}$,
+  so both coupling coefficients are actually present, hence solving
+  this paradox.}
+$$
+  D_2={{\sin(b_{\pm}L)-i(\kappa_{\pm}/2b_{\pm})\cos(b_{\pm}L)}
+      \over{\cos(b_{\pm}L)+i(\kappa_{\pm}/2b_{\pm})\sin(b_{\pm}L)}}
+      A^{f\pm}_{\omega_2}(0),
+  \eqdef{eq:waveeq560}
+$$
+To summarize, the envelope of the forward traveling signal is from
+Eqs.~\eqref{eq:waveeq480b} and~\eqref{eq:waveeq540}--\eqref{eq:waveeq560}
+explicitly given as
+\par\boxit{
+$$
+    A^{f\pm}_{\omega_2}(z)
+      =A^{f\pm}_{\omega_2}(0)\bigg(\cos(b_{\pm}z)+
+      {{\sin(b_{\pm}L)-i(\kappa_{\pm}/2b_{\pm})\cos(b_{\pm}L)}
+      \over{\cos(b_{\pm}L)+i(\kappa_{\pm}/2b_{\pm})\sin(b_{\pm}L)}}
+      \sin(b_{\pm}z)
+      \bigg)\exp(i\kappa_{\pm}z/2).
+  \eqdef{eq:waveeq560}
+$$
+}
+\noindent
+As a simple sanity check on this expression, we see that it trivially fulfils
+the initial condition when $z=0$.
+
+\section{Signal amplification over a full passage of the medium}
+When passing over the medium from $z=0$ to $z=L$, the LCP/RCP modes of the
+signal expressed by Eq.~\eqref{eq:waveeq560} experience the gain
+$$
+  \eqalign{
+  G^{\pm}_{\rm s}
+    &\equiv{{|A^{f\pm}_{\omega_2}(L)|^2}\over{|A^{f\pm}_{\omega_2}(0)|^2}}\cr
+    &=\bigg|\cos(b_{\pm}L)+
+      {{\sin(b_{\pm}L)-i(\kappa_{\pm}/2b_{\pm})\cos(b_{\pm}L)}
+      \over{\cos(b_{\pm}L)+i(\kappa_{\pm}/2b_{\pm})\sin(b_{\pm}L)}}
+      \sin(b_{\pm}L)
+      \bigg|^2\cr
+    &=\bigg|{{\cos(b_{\pm}L)+i(\kappa_{\pm}/2b_{\pm})\sin(b_{\pm}L)}
+      \over{\cos(b_{\pm}L)+i(\kappa_{\pm}/2b_{\pm})\sin(b_{\pm}L)}}
+      \cos(b_{\pm}L)+
+      {{\sin(b_{\pm}L)-i(\kappa_{\pm}/2b_{\pm})\cos(b_{\pm}L)}
+      \over{\cos(b_{\pm}L)+i(\kappa_{\pm}/2b_{\pm})\sin(b_{\pm}L)}}
+      \sin(b_{\pm}L)
+      \bigg|^2\cr
+    &=\bigg|
+        {{{[\cos(b_{\pm}L)+i(\kappa_{\pm}/2b_{\pm})\sin(b_{\pm}L)]}\cos(b_{\pm}L)
+          +{[\sin(b_{\pm}L)-i(\kappa_{\pm}/2b_{\pm})\cos(b_{\pm}L)]}\sin(b_{\pm}L)}
+         \over{\cos(b_{\pm}L)+i(\kappa_{\pm}/2b_{\pm})\sin(b_{\pm}L)}}
+      \bigg|^2\cr
+    &={{1}\over{|\cos(b_{\pm}L)+i(\kappa_{\pm}/2b_{\pm})\sin(b_{\pm}L)|^2}}\cr
+    &={{1}\over{\cos^2(b_{\pm}L)+(\kappa_{\pm}/2b_{\pm})^2\sin^2(b_{\pm}L)}}.\cr
+  }
+  \eqdef{eq:waveeq570}
+$$
+In perfect phase matching, $\kappa_{\pm}=0$ for whichever mode LCP/RCP, and the
+gain under this circumstance takes the form
+$$
+  G^{\pm}_{\rm s}={{1}\over{\cos^2(b_{\pm}L)}},
+  \eqdef{eq:waveeq580}
+$$
+which goes to infinity whenever
+$$
+  b_{\pm}L=\pi/2\quad\Rightarrow\quad G^{\pm}_{\rm s}\to\infty,
+  \eqdef{eq:waveeq590}
+$$
+or from Eq.~\eqref{eq:waveeq470}, keeping in mind that $\kappa_{\pm}=0$,
+equivalently
+$$
+  \gamma_1\gamma_2|A^{f\mp}_{\omega_3}|^2 L^2 = (\pi/2)^2
+  \quad\Rightarrow\quad G^{\pm}_{\rm s}\to\infty.
+  \eqdef{eq:waveeq600}
+$$
+In other words, the threshold is reached whenever the pump intensity reaches
+$$
+  \gamma_1\gamma_2|A^{f\mp}_{\omega_3}|^2=\Big({{\pi}\over{2L}}\Big)^2.
+  \eqdef{eq:waveeq610}
+$$
+As the intensity is defined as $I=c_0n\varepsilon_0|E|^2$, where $c_0$ is the
+vacuum speed of light, $n$ is the index of refraction of the medium and
+$\varepsilon_0$ the vacuum permittivity, this means that the corresponding
+LCP/RCP pump threshold intensities $I^{\pm}_{\rm th}$ expressed in SI units
+become\numberedfootnote{We here ignore the fact that LCP/RCP in chiral
+  media in fact have different refractive indices; also notice that we
+  from Eq.~\eqref{eq:waveeq400} may reformulate this as the rather silly
+  expression
+  $$
+    I^{\pm}_{\rm th}={{\pi^4 c^3 n_1 n_2 n_3\varepsilon_0}
+                   \over{4\omega_1 \omega_2 p_1 p_2 L^2}}\quad\ldots
+  $$}
+$$
+  I^{\pm}_{\rm th}={{cn_3\varepsilon_0}\over{\
+      \gamma_1\gamma_2}}
+  \Big({{\pi}\over{2L}}\Big)^2,
+  \eqdef{eq:waveeq620}
+$$
+
+\section{Interpretation in normalized and dimensionless variables}
+In the expressions for the explicit solutions and in the definition of
+$b_{\pm}=(\kappa^2_{\pm}/4 +\gamma_1\gamma_2|A^{f\mp}_{\omega_3}|^2)^{1/2}$ in
+Eq.~\eqref{eq:waveeq470}, we find that there are a set of naturally appearing
+pairs of variables, such as
+$$
+  b_{\pm}L,\qquad
+  \kappa_{\pm}L/2,\qquad
+  \kappa_{\pm}/2b_{\pm},\qquad
+  \hbox{and}\qquad\gamma_1\gamma_2|A^{f\mp}_{\omega_3}|^2L^2.
+  \eqdef{eq:waveeq630}
+$$
+Let us therefore attempt to identify suitable normalized and dimensionless
+forms involving these parameters as far as possible, starting with the pump
+intensity $\gamma_1\gamma_2|A^{f\mp}_{\omega_3}|^2L^2$, which we via the threshold
+of Eq.~\eqref{eq:waveeq620} find can be written as
+$$
+  \gamma_1\gamma_2|A^{f\mp}_{\omega_3}|^2L^2
+    =\Big({{\pi}\over{2}}\Big)^2 {{I_{\rm pump}}\over{I_{\rm th}}}.
+  \eqdef{eq:waveeq640}
+$$
+As for the term $\kappa_{\pm}L/2$, we should here be somewhat careful, as this
+for the backward OPA contains $\Delta kL$ which for the backward configuration
+is huge in numerical value as such; the idea in QPM is that this should be
+very close to the term $2\pi L/\Lambda$, and we should hence separarate out
+this pair as the effective phase mismatch.
+Hence, the term $\kappa_{\pm}L/2$ can be formulated in terms of normalized and
+dimensionless quotes as\numberedfootnote{See Eq.~\eqref{eq:waveeq380}
+  for the definition of $\kappa_{\pm}$.}
+$$
+  \eqalign{
+   \kappa_{\pm}L/2&\equiv(\Delta k\pm\Delta\alpha - 2\pi/\Lambda)L/2\cr
+      &=\Big({{\Delta kL}\over{2}}-{{2\pi L}\over{2\Lambda}}\Big)
+          \Big(
+            1\pm{{\Delta\alpha}\over{\Delta k-2\pi/\Lambda}}
+          \Big).\cr
+  }
+  \eqdef{eq:waveeq650}
+$$
+Meanwhile, the term $b_{\pm}L$ can similarly be formulated in terms of the
+normalized and dimensionless quotes, including the pump intensity vs threshold,
+as\numberedfootnote{Notice that at perfect quasi phase matching against the
+  electric dipolar mismatch $\Delta k$, we have $2\pi/(\Delta k\Lambda)=1$,
+  and hence the expression for $b_{\pm}$ becomes {\it symmetric} in the chiral
+  phase mismatch parameter $\Delta\alpha$.}
+$$
+  \eqalign{
+   b_{\pm}L&\equiv(\kappa^2_{\pm}/4 +\gamma_1\gamma_2|A^{f\mp}_{\omega_3}|^2)^{1/2}L\cr
+      &=\big[(\kappa_{\pm}L/2)^2 +(\pi/2)^2(I_{\rm pump}/I_{\rm th})\big]^{1/2}\cr
+      &=\big[((\Delta k\pm\Delta\alpha - 2\pi/\Lambda)L/2)^2
+          +(\pi/2)^2(I_{\rm pump}/I_{\rm th})\big]^{1/2}\cr
+      &=\bigg[\Big({{\Delta kL}\over{2}}-{{2\pi L}\over{2\Lambda}}\Big)^2
+          \Big(
+            1\pm{{\Delta\alpha}\over{\Delta k-2\pi/\Lambda}}
+          \Big)^2
+          +\Big({{\pi}\over{2}}\Big)^2{{I_{\rm pump}}\over{I_{\rm th}}}
+        \bigg]^{1/2},\cr
+  }
+  \eqdef{eq:waveeq660}
+$$
+and finally and trivially,
+$$
+  \eqalign{
+   {{\kappa_{\pm}}\over{2b_{\pm}}}=
+   {{\kappa_{\pm}L/2}\over{b_{\pm}L}}
+   &={{\displaystyle
+        \Big({{\Delta kL}\over{2}}-{{2\pi L}\over{2\Lambda}}\Big)
+          \Big(
+            1\pm{{\Delta\alpha}\over{\Delta k-2\pi/\Lambda}}
+        \Big)
+   }\over{\displaystyle
+      \bigg[\Big({{\Delta kL}\over{2}}-{{2\pi L}\over{2\Lambda}}\Big)^2
+          \Big(
+            1\pm{{\Delta\alpha}\over{\Delta k-2\pi/\Lambda}}
+          \Big)^2
+          +\Big({{\pi}\over{2}}\Big)^2{{I_{\rm pump}}\over{I_{\rm th}}}
+      \bigg]^{1/2}}}.\cr
+  }
+  \eqdef{eq:waveeq670}
+$$
+Thus, by adopting the short-hand notation for the normalized and dimensionless
+variables
+\par\boxit{
+$$
+  \beta\equiv{{\Delta\alpha}\over{\Delta k-2\pi/\Lambda}},\qquad
+  \delta\equiv\Big({{\Delta kL}\over{2}}-{{2\pi L}\over{2\Lambda}}\Big),\qquad
+  \eta=({{\pi}/{2}})^2{{I_{\rm pump}}/{I_{\rm th}}},
+  \eqdef{eq:waveeq672}
+$$
+}\noindent
+the expressions $\kappa_{\pm}L/2$, $b_{\pm}L$ and ${{\kappa_{\pm}}/{2b_{\pm}}}$ are
+compactified to
+\par\boxit{
+$$
+  \kappa_{\pm}L/2=\delta(1\pm\beta),\qquad
+  b_{\pm}L=(\delta^2(1\pm\beta)^2+\eta)^{1/2},\qquad
+  {{\kappa_{\pm}}\over{2b_{\pm}}}={{\delta(1\pm\beta)}
+    \over{(\delta^2(1\pm\beta)^2+\eta)^{1/2}}}.
+  \eqdef{eq:waveeq674}
+$$
+}\noindent
+In particular, in terms of these parameters the gain expressed by
+Eq.~\eqref{eq:waveeq570} becomes
+\par\boxit{
+$$
+  \eqalign{
+  G^{\pm}_{\rm s}
+    &={{1}\over{\cos^2(b_{\pm}L)+(\kappa_{\pm}/2b_{\pm})^2\sin^2(b_{\pm}L)}}.\cr
+    &={{1}\over{\displaystyle\cos^2((\delta^2(1\pm\beta)^2+\eta)^{1/2})
+    +\bigg({{\delta(1\pm\beta)}
+            \over{(\delta^2(1\pm\beta)^2+\eta)^{1/2}}}
+     \bigg)^2\sin^2((\delta^2(1\pm\beta)^2+\eta)^{1/2})}}.\cr
+    &={{(\delta^2(1\pm\beta)^2+\eta)^{1/2}}
+    \over{\displaystyle(\delta^2(1\pm\beta)^2+\eta)^{1/2}
+    \cos^2((\delta^2(1\pm\beta)^2+\eta)^{1/2})
+    +\delta^2(1\pm\beta)^2\sin^2((\delta^2(1\pm\beta)^2+\eta)^{1/2})}}.\cr
+  }
+  \eqdef{eq:waveeq676}
+$$
+}
+
+\section{Interpretation in case of perfect QPM against electric dipolar
+         phase mismatch}
+Of particular interest is the interpretation of the terms $\kappa_{\pm}L/2$,
+$b_{\pm}L$ and their quote $\kappa_{\pm}/2b_{\pm}$ in the case of perfect quasi
+phase matching against the electric dipolar phase mismatch $\Delta k$, that is
+to say whenever
+$$
+  \Delta k={{2\pi}\over{\Lambda}}.
+  \eqdef{eq:perfectqpm10}
+$$
+In this particular case of interest,
+$$
+   \kappa_{\pm}L/2
+      =\Big({{\Delta kL}\over{2}}\Big)
+          \Big(
+            1\pm{{\Delta\alpha}\over{\Delta k}}
+               -\underbrace{{{2\pi}\over{\Delta k\Lambda}}}_{=1}
+          \Big)
+      =\pm{{\Delta\alpha L}\over{2}}
+  \eqdef{eq:perfectqpm20}
+$$
+Meanwhile, the term $b_{\pm}L$ in the perfect QPM case becomes
+$$
+   b_{\pm}L
+      =\bigg[\Big({{\Delta kL}\over{2}}\Big)^2
+          \Big(
+            1\pm{{\Delta\alpha}\over{\Delta k}}
+              -\underbrace{{{2\pi}\over{\Delta k\Lambda}}}_{=1}
+          \Big)^2
+          +\Big({{\pi}\over{2}}\Big)^2{{I_{\rm pump}}\over{I_{\rm th}}}
+        \bigg]^{1/2}
+      =\bigg[
+          \Big(
+            {{\Delta\alpha L}\over{2}}
+          \Big)^2
+          +\Big({{\pi}\over{2}}\Big)^2{{I_{\rm pump}}\over{I_{\rm th}}}
+        \bigg]^{1/2},
+  \eqdef{eq:perfectqpm30}
+$$
+and finally and trivially,
+$$
+   {{\kappa_{\pm}}\over{2b_{\pm}}}
+   =\pm{{\displaystyle\Big({{\Delta\alpha L}\over{2}}\Big)}
+       \over{\displaystyle
+        \bigg(
+          \Big(
+            {{\Delta\alpha L}\over{2}}
+          \Big)^2
+          +\Big({{\pi}\over{2}}\Big)^2{{I_{\rm pump}}\over{I_{\rm th}}}
+        \bigg)^{1/2}
+        }}
+  \eqdef{eq:perfectqpm40}
+$$
+%We define the short-hand notation
+%$$
+%  \beta\equiv\Delta\alpha L/2,\qquad
+%  \delta\equiv (\beta^2+\eta)^{1/2},\qquad
+%  \eta=({{\pi}/{2}})^2{{I_{\rm pump}}/{I_{\rm th}}}.
+%  \eqdef{eq:perfectqpm50}
+%$$
+%After some straightforward algebra, keeping in mind that with this notation
+%$\kappa_{\pm}L/2=\pm\Delta\alpha L/2=\pm\beta$, $b_{\pm}L=\delta$, and
+%$\kappa_{\pm}/2b_{\pm}=\pm\beta/(\beta^2+\eta)^{1/2}=\pm\beta/\delta$, the sign%al
+%envelope from Eq.~\eqref{eq:waveeq560} may hence in the perfectly matched case
+%against electric dipolar mismatch be written as
+%\par\boxit{
+%$$
+%  \eqalign{
+%    A^{f\pm}_{\omega_2}(z)
+%%      &=A^{f\pm}_{\omega_2}(0)\bigg(\cos(b_{\pm}z)+
+%%        {{\sin(b_{\pm}L)-i(\kappa_{\pm}/2b_{\pm})\cos(b_{\pm}L)}
+%%        \over{\cos(b_{\pm}L)+i(\kappa_{\pm}/2b_{\pm})\sin(b_{\pm}L)}}
+%%        \sin(b_{\pm}z)
+%%        \bigg)\exp(i\kappa_{\pm}z/2)\cr
+%      &=A^{f\pm}_{\omega_2}(0)\bigg(\cos(\delta z/L)+
+%        {{\sin(\delta)\mp i(\beta/\delta)\cos(\delta)}
+%        \over{\cos(\delta)\pm i(\beta/\delta)\sin(\delta)}}
+%        \sin(\delta z/L)
+%        \bigg)\exp(\pm i\beta z/L).\cr
+%  }
+%  \eqdef{eq:perfectqpm60}
+%$$
+%}
+%\noindent
+Now notice that in the fully quasi phase matched case against the electric
+dipolar phase mismatch, $\kappa_{\pm}L/2$ is fully {\it antisymmetric} with
+respect to chiral coefficient $\Delta\alpha$ for the phase mismatch, while
+$b_{\pm}L$ is fully {\it symmetric} with respect to the same parameter.
+Thus, in this particular case of perfect phase matching, the single-pass gain
+is from Eq.~\eqref{eq:waveeq676} expressed as
+$$
+  \eqalign{
+  G^{\pm}_{\rm s}
+    &={{1}\over{\cos^2(b_{\pm}L)+(\kappa_{\pm}/2b_{\pm})^2\sin^2(b_{\pm}L)}}.\cr
+    &=\Bigg\{
+    \cos^2\Big(
+          \Big(
+            \Big(
+              {{\Delta\alpha L}\over{2}}
+            \Big)^2
+            +\Big({{\pi}\over{2}}\Big)^2{{I_{\rm pump}}\over{I_{\rm th}}}
+          \Big)^{1/2}
+        \Big)
+        \cr&\hskip60pt
+    +{{\displaystyle\Big({{\Delta\alpha L}\over{2}}\Big)^2}
+       \over{\displaystyle
+        \bigg(
+          \Big(
+            {{\Delta\alpha L}\over{2}}
+          \Big)^2
+          +\Big({{\pi}\over{2}}\Big)^2{{I_{\rm pump}}\over{I_{\rm th}}}
+        \bigg)
+        }}
+    \sin^2\Big(
+          \Big(
+            \Big(
+              {{\Delta\alpha L}\over{2}}
+            \Big)^2
+            +\Big({{\pi}\over{2}}\Big)^2{{I_{\rm pump}}\over{I_{\rm th}}}
+          \Big)^{1/2}
+        \Big)
+        \Bigg\}^{-1}.\cr
+  }
+  \eqdef{eq:perfectqpm70}
+$$
+This result might indeed be rather surprising, as this expression for the gain
+is independent of the sign of $\Delta\alpha$; that is to say, the signal gain
+$G_{\pm}$ is completely symmetric against the chiral phase mismatch
+$\Delta\alpha$.
+{\it In other words, the LCP and RCP modes are affected equally as functions
+of the chiral phase mismatch parameter, without any distinction.}
+
+\section{Reasonable parameter values}
+In the backward OPA configuration, the phase mismatch parameters are radically
+different than in the classical forward configuration. To start with, the
+expressions in Eqs.~\eqref{eq:waveeq650}--\eqref{eq:waveeq670} all contain
+the electric dipolar phase mismatch factor $\Delta kL/2$ which from
+Eq.~\eqref{eq:waveeq270} yields
+$$
+  {{\Delta kL}\over{2}}\equiv(k_3-k_2+k_1)L/2,
+  \qquad\Delta\alpha=\beta_3+\beta_2+\beta_1,
+\eqdef{eq:waveeq680}
+$$
+where $k_j=n_j\omega_j/c=n_j2\pi/\lambda_0$ are the magnitude of the
+corresponding wave vectors.
+If the idler and signal are of comparable wavelengths, say in the order of
+1200 nm, and the pump (fulfilling the requirement $\omega_3=\omega_2+\omega_1$)
+in the order of 600 nm, and that we furthermore assume the refractive index
+for the idler and signal being in the order of $n_{1,2}\sim1.7$ and the pump
+$n_{1,2}\sim1.9$, we then from Eq.~\eqref{eq:waveeq680} obtain the typical
+order of the phase mismatch over a crystal of length $L=10$ mm as
+$$
+  \eqalign{
+  {{\Delta kL}\over{2}}
+    &={{1}\over{2}}\Big(
+        {{2\pi\times 1.9}\over{600\times10^{-9}\ {\rm m}}}
+          -{{2\pi\times 1.7}\over{1200\times10^{-9}\ {\rm m}}}
+          +{{2\pi\times 1.7}\over{1200\times10^{-9}\ {\rm m}}}
+      \Big)\times(10\times10^{-3}\ {\rm m})
+    \approx 99\times10^3.\cr
+  }
+  \eqdef{eq:waveeq690}
+$$
+In order to match this with quasi phase matching configuration, we from
+Eq.~\eqref{eq:waveeq650} hence require that the spatial period $\Lambda$
+is chosen as
+$$
+  \eqalign{
+    1\pm{{\Delta\alpha}\over{\Delta k}}-{{2\pi}\over{\Delta k\Lambda}}=0
+    \quad\Leftrightarrow\quad
+    \Lambda={{2\pi}
+             \over{\displaystyle\Delta k\Big(1\pm{{\Delta\alpha}
+                                                  \over{\Delta k}}\Big)}}
+    \quad\Leftrightarrow\quad
+    \Lambda={{\pi L}
+             \over{\displaystyle\Big({{\Delta kL}\over{2}}\Big)
+               \Big(1\pm{{\Delta\alpha}\over{\Delta k}}\Big)}},
+  }
+  \eqdef{eq:waveeq700}
+$$
+that is to say, if we design this period to just match the electric dipolar
+mismatch $\Delta k$, ignoring $\Delta\alpha/\Delta k$,
+$$
+  \eqalign{
+    \Lambda={{\pi (10\times10^{-3}\ {\rm m})}\over{(99\times10^3)}}
+    \approx 0.32\times10^{-6}\ {\rm m} = 320\ {\rm nm}.
+  }
+  \eqdef{eq:waveeq710}
+$$
+Thus, we may at first conclude that a reasonable value for the dimensionless
+``direct'' electric dipolar phase mismatch parameter is
+$$
+  {{\Delta kL}\over{2}}=100\times10^3.
+  \eqdef{eq:waveeq720}
+$$
+Thus, in order to achieve phase matching as described by $\kappa_{\pm}=0$ in
+Eq.~\eqref{eq:waveeq650},\numberedfootnote{Eq.~\eqref{eq:waveeq650} simply
+states that
+  $$
+    \kappa_{\pm}L/2=\Big({{\Delta kL}\over{2}}\Big)
+       \Big(
+         1\pm{{\Delta\alpha}\over{\Delta k}}-{{2\pi}\over{\Delta k\Lambda}}
+       \Big),
+  $$
+  which should equal to zero at perfect phase matching.}
+we have three primary choices for the quasi phase matching  period $\Lambda$:
+$$
+  \eqalign{
+    {{2\pi}\over{\Delta k\Lambda}}&=1+{{\Delta\alpha}\over{\Delta k}}
+    \qquad\Rightarrow\qquad\kappa_+=0 \hskip45pt\hbox{(LCP phase matched)}\cr
+    {{2\pi}\over{\Delta k\Lambda}}&=1-{{\Delta\alpha}\over{\Delta k}}
+    \qquad\Rightarrow\qquad\kappa_-=0 \hskip45pt\hbox{(RCP phase matched)}\cr
+    {{2\pi}\over{\Delta k\Lambda}}&=1
+    \hskip50pt\Rightarrow\qquad\kappa_{+}+\kappa_{-}=0
+    \qquad\hbox{(phase matched at zero gyrotropy)}\cr
+  }
+$$
+
+\section{Graphs and visual interpretations}
+We will in the following focus on the dependence of backward-wave optical
+parametric amplification on the electric dipolar phase mismatch against the
+nominal quasi phase matching period $\Lambda$, using the normalized set of
+parameters as defined in Eq.~\eqref{eq:waveeq672},
+$$
+  \beta\equiv{{\Delta\alpha}\over{\Delta k-2\pi/\Lambda}},\qquad
+  \delta\equiv\Big({{\Delta kL}\over{2}}-{{2\pi L}\over{2\Lambda}}\Big),\qquad
+  \eta=({{\pi}/{2}})^2{{I_{\rm pump}}/{I_{\rm th}}}.
+  \eqdef{eq:graphs10}
+$$
+
+\bigskip
+\centerline{\epsfxsize=240pt\epsfbox{python/graphs/graph-01-delta-0.50.eps}}
+\medskip
+\noindent
+{\bf Figure~3}. Stokes parameters for the forward traveling signal envelope,
+for the case of an electric dipolar phase mismatch of
+$(\Delta k=2\pi/\Lambda)L/2=0.5$ and with a pump intensity to threshold
+quote of $\eta=(\pi/2)^2I_{\rm pump}/I_{\rm th}=2.0$.
+[Filename: {\tt python/graphs/graph-01-delta-0.50.eps}]
+\vfill\eject
+\bigskip
+\centerline{\epsfxsize=240pt\epsfbox{python/graphs/graph-01-delta-1.00.eps}}
+\medskip
+\noindent
+{\bf Figure~4}. Identical to Fig.~3 but with an electric dipolar phase mismatch
+against nominal QPM period $(\Delta k=2\pi/\Lambda)L/2=1.0$.
+[Filename: {\tt python/graphs/graph-01-delta-1.00.eps}]
+\bigskip
+\centerline{\epsfxsize=240pt\epsfbox{python/graphs/graph-01-delta-1.50.eps}}
+\medskip
+\noindent
+{\bf Figure~5}. Identical to Fig.~3 but with an electric dipolar phase mismatch
+against nominal QPM period $(\Delta k=2\pi/\Lambda)L/2=1.5$.
+[Filename: {\tt python/graphs/graph-01-delta-1.50.eps}]
+\vfill\eject
+
+\centerline{\epsfxsize=310pt\epsfbox{poincare/graph-01-poincare.eps}}
+\medskip
+\noindent
+{\bf Figure~6}. Poincar\'e map of the Stokes trajectories described by
+Figs.~1--3.
+[Filename: {\tt poincare/graph-01-poincare.eps}]
+\bigskip
+\bigskip
+\centerline{\epsfxsize=250pt\epsfbox{python/graphs/graph-02.eps}}
+\medskip
+\noindent
+{\bf Figure~7}. Signal gain $G_{\pm}$ as function of the chiral contribution
+  $\Delta\alpha$ to the phase mismatch, for the case when the quasi phase
+  matching period $\Lambda$ is chosen to perfectly match the electric dipolar
+  phase mismatch, that is to say with $\Delta k=2\pi/\Lambda$. The gain
+  curves are here mapped for a set of pump intensity quotes vs threshold,
+  $\eta=(\pi/2)^I_{\rm pump}/I_{\rm th}$. Notice the completely symmetric dependence
+  of gain against $\Delta\alpha$.
+[Filename: {\tt python/graphs/graph-02.eps}]
+\vfill\eject
+
+\centerline{\epsfxsize=240pt\epsfbox{python/graphs/graph-03-surf.eps}}
+\medskip
+\noindent
+{\bf Figure~8}. The signal gain $G_{+}$ (LCP, orange surface) and $G_{-}$
+(RCP, blue surface) mapped as functions of the electric dipolar phase
+mismatch $\delta=(\Delta k-2\pi/\Lambda)L/2$, against the nominal quasi
+phase matching period $\Lambda$, and the chiral contribution to the phase
+matching $\beta=\Delta\alpha/(\Delta k-2\pi/\Lambda)$.
+Levels of constant gain are at the bottom plane mapped for $G_{+}$ (LCP,
+orange contours) and $G_{-}$ (RCP, blue contours).
+[Filename: {\tt python/graphs/graph-03-surf.eps}]
+\bigskip
+\centerline{\epsfxsize=240pt\epsfbox{python/graphs/graph-03-gplus-image.eps}}
+\medskip
+\noindent
+{\bf Figure~9}.
+Constant levels of the signal gain $G_+$ (LCP), showing the dependence of the
+electric dipolar phase mismatch $\delta=(\Delta k-2\pi/\Lambda)L/2$ relative
+the chiral contribution to the phase matching
+$\beta=\Delta\alpha/(\Delta k-2\pi/\Lambda)$.
+%\vfill\eject
+[Filename: {\tt python/graphs/graph-03-gplus-image.eps}]
+\vfill\eject
+
+\centerline{\epsfxsize=240pt\epsfbox{python/graphs/graph-03-gminus-image.eps}}
+\medskip
+\noindent
+{\bf Figure~10}.
+Same as Fig.~9 but for $G_-$ (RCP), being antisymmetric to the LCP case with
+respect to the chirality mismatch term $\Delta\alpha$.
+[Filename: {\tt python/graphs/graph-03-gminus-image.eps}]
+\bigskip
+
+\centerline{\epsfxsize=240pt\epsfbox{python/graphs/graph-04-s0-surface.eps}}
+\medskip
+\noindent
+{\bf Figure~11}.
+Map of the intensity gain $S_0(L)/S_0(0)$ vs electric dipolar phase mismatch
+$\delta=(\Delta k-2\pi/\Lambda)L/2$ and the chiral contribution to the phase
+matching $\beta=\Delta\alpha/(\Delta k-2\pi/\Lambda)$. The map is constructed
+for a pump intensity to threshold quote of
+$\eta=(\pi/2)^2I_{\rm pump}/I_{\rm th}=2.0$. Contours at constant intensity gain
+are mapped at the bottom plane.
+[Filename: {\tt python/graphs/graph-04-s0-surface.eps}]
+\vfill\eject
+
+\centerline{\epsfxsize=240pt\epsfbox{python/graphs/graph-04-s0-5.00-image.eps}}
+\medskip
+\noindent
+{\bf Figure~12}.
+Map of the levels of constant intensity gain $S_0(L)/S_0(0)$, showing the
+complex interconnection between the electric dipolar phase mismatch
+$\delta=(\Delta k-2\pi/\Lambda)L/2$ and the chiral contribution to the phase
+matching $\beta=\Delta\alpha/(\Delta k-2\pi/\Lambda)$. The mapped contours
+at constant intensity gain are equal to those mapped in Fig.~8, for a pump
+intensity to threshold quote of $\eta=(\pi/2)^2I_{\rm pump}/I_{\rm th}=2.0$.
+[Filename: {\tt python/graphs/graph-04-s0-5.00-image.eps}]
+\bigskip
+
+\centerline{\epsfxsize=240pt\epsfbox{python/graphs/graph-04-s0-contour-5.00-black.eps}}
+\medskip
+\noindent
+{\bf Figure~13}.
+Identical to Fig.~12 but in plain black and white, possibly more suitable for
+printing in a journal.
+[Filename: {\tt python/graphs/graph-04-s0-contour-5.00-black.eps}]
+\vfill\eject
+
+\section{Signal ellipticity dependence on electric dipolar and chiral
+         phase mismatch, pump intensity-to-threshold quote 2.0}
+\bigskip
+\bigskip
+\centerline{\epsfxsize=240pt\epsfbox{python/graphs/graph-05-s3-2.00-surface.eps}}
+\medskip
+\noindent
+{\bf Figure~14}.
+Map of the transmitted signal ellipticity $S_3(L)/S_0(L)$ vs electric dipolar phase
+mismatch $\delta=(\Delta k-2\pi/\Lambda)L/2$ and the chiral contribution to
+the phase matching $\beta=\Delta\alpha/(\Delta k-2\pi/\Lambda)$.
+The polarization state of the signal and pump at $z=0$ were linearly polarized,
+and the map is constructed for a pump intensity to threshold quote of
+$\eta=(\pi/2)^2I_{\rm pump}/I_{\rm th}=2.0$. Contours at constant intensity gain
+are mapped at the bottom plane.
+[Filename: {\tt python/graphs/graph-05-s3-2.00-surface.eps}]
+\bigskip
+
+\centerline{\epsfxsize=240pt\epsfbox{python/graphs/graph-05-s3-2.00-image.eps}}
+\medskip
+\noindent
+{\bf Figure~15}.
+Map of levels of constant transmitted signal ellipticity $S_3(L)/S_0(L)$,
+showing the interconnection between electric dipolar phase mismatch
+$\delta=(\Delta k-2\pi/\Lambda)L/2$ and the chiral contribution to the
+phase matching $\beta=\Delta\alpha/(\Delta k-2\pi/\Lambda)$.
+The polarization state of the signal and pump at $z=0$ were linearly polarized,
+and the map is constructed for a pump intensity to threshold quote of
+$\eta=(\pi/2)^2I_{\rm pump}/I_{\rm th}=2.0$.
+These contours are identical to the ones mapped at the bottom plane of Fig.~14.
+[Filename: {\tt python/graphs/graph-05-s3-2.00-image.eps}]
+\vfill\eject
+
+\centerline{\epsfxsize=240pt\epsfbox{python/graphs/graph-05-s3-2.00-contour-black.eps}}
+\medskip
+\noindent
+{\bf Figure~16}.
+Levels identical to the ones shown in Fig.~15, but in plain black and white,
+suitable for printing.
+[Filename: {\tt python/graphs/graph-05-s3-2.00-contour-black.eps}]
+\vfill\eject
+
+\section{Signal ellipticity dependence on electric dipolar and chiral
+         phase mismatch, pump intensity-to-threshold quote 5.0}
+\bigskip
+\bigskip
+\centerline{\epsfxsize=240pt\epsfbox{python/graphs/graph-05-s3-5.00-surface.eps}}
+\medskip
+\noindent
+{\bf Figure~17}.
+Map of the transmitted signal ellipticity $S_3(L)/S_0(L)$ vs electric dipolar phase
+mismatch $\delta=(\Delta k-2\pi/\Lambda)L/2$ and the chiral contribution to
+the phase matching $\beta=\Delta\alpha/(\Delta k-2\pi/\Lambda)$.
+The polarization state of the signal and pump at $z=0$ were linearly polarized,
+and the map is constructed for a pump intensity to threshold quote of
+$\eta=(\pi/2)^2I_{\rm pump}/I_{\rm th}=3.0$. Contours at constant intensity gain
+are mapped at the bottom plane.
+[Filename: {\tt python/graphs/graph-05-s3-5.00-surface.eps}]
+\bigskip
+
+\centerline{\epsfxsize=240pt\epsfbox{python/graphs/graph-05-s3-5.00-image.eps}}
+\medskip
+\noindent
+{\bf Figure~18}.
+Map of levels of constant transmitted signal ellipticity $S_3(L)/S_0(L)$,
+showing the interconnection between electric dipolar phase mismatch
+$\delta=(\Delta k-2\pi/\Lambda)L/2$ and the chiral contribution to the
+phase matching $\beta=\Delta\alpha/(\Delta k-2\pi/\Lambda)$.
+The polarization state of the signal and pump at $z=0$ were linearly polarized,
+and the map is constructed for a pump intensity to threshold quote of
+$\eta=(\pi/2)^2I_{\rm pump}/I_{\rm th}=2.0$.
+These contours are identical to the ones mapped at the bottom plane of Fig.~17.
+[Filename: {\tt python/graphs/graph-05-s3-5.00-image.eps}]
+\vfill\eject
+
+\centerline{\epsfxsize=240pt\epsfbox{python/graphs/graph-05-s3-5.00-contour-black.eps}}
+\medskip
+\noindent
+{\bf Figure~19}.
+Levels identical to the ones shown in Fig.~18, but in plain black and white,
+suitable for printing.
+[Filename: {\tt python/graphs/graph-05-s3-5.00-contour-black.eps}]
+\vfill\eject
+
+\bye
