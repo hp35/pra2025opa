@@ -3,7 +3,6 @@
 #
 # Copyright (C) 2025, Fredrik Jonsson, under GPL 3.0. See enclosed LICENSE.
 #
-FIGURES = $(wildcard metapost/*.pdf)
 PROJECT = bwopatheory
 
 all: $(PROJECT).pdf
