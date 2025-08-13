@@ -1,4 +1,4 @@
-# Computer code, notes and supporting data for <em>Photoinduced flipping of optical chirality during backward-wave parametric amplification in a chiral nonlinear medium</em>, Phys. Rev. A (2025)
+# Computer code, notes and supporting data for <em>Photoinduced flipping of optical chirality during backward-wave parametric amplification in a chiral nonlinear medium</em>, Physical Review A 112, L021503 (2025)
 
 This repository contains all data, supporting computer code and notes
 (`bwopatheory.tex`; plain TeX code) for the article <em>Photoinduced flipping
